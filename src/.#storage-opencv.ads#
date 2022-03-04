@@ -1,8 +1,0 @@
-package storage.opencv is
-
-   type image_t(n,c,h,w : Positive) is record
-      data : storage_t := init(1,c,h,w);
-      label : storage_t := init(1,n,1,1);
-   end record;
-
-end storage.opencv;
