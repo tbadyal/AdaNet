@@ -1,0 +1,60 @@
+with tensors;
+with ada.Text_IO;
+with System.Address_Image;
+with cuda.driver;
+with cuda.io;
+with stddef_h;
+use type stddef_h.size_t;
+procedure test is
+
+   t : Integer := 1;
+   alpha : Float := 1.0e-2;
+   beta1 : Float := 0.9;
+   beta2 : Float := 0.999;
+   epsilon : Float := 1.0e-8;
+   Vdf :   tensors.filter_tensor := tensors.zero(10,1,1,1);
+   Sdf :   tensors.filter_tensor := tensors.zero(10,1,1,1);
+   f : tensors.filter_tensor := tensors.rand(10,1,1,1);
+   df : tensors.filter_tensor := tensors.rand(10,1,1,1);
+
+   k : cuda.driver.kernel := cuda.driver.compile(    "adam",
+                                                     "#define N "& f.num'Img,
+                                                     "extern ""C"" __global__ "&
+                                                     " void adam(float *f, float *df, float *vdf, float *sdf, "&
+                                                     " int t, float alpha, float beta1, float beta2, float epsilon) {"&
+                                                     "  float vdf_c;"&
+                                                     "  float sdf_c;"&
+                                                     "    int tid = blockDim.x * blockIdx.x + threadIdx.x;"&
+                                                     "    if (tid < N) {"&
+                                                     "        vdf[tid] = beta1 * vdf[tid] + (1.0 - beta1) *  df[tid];"&
+                                                     "        sdf[tid] = beta2 * sdf[tid] + (1.0 - beta2) *  pow(df[tid],2);"&
+                                                     "        vdf_c = vdf[tid] / (1.0 - pow(beta1, t));"&
+                                                     "        sdf_c = sdf[tid] / (1.0 - pow(beta2, t));"&
+                                                     "        f[tid] = f[tid] - alpha * vdf_c / (sqrt(sdf_c) + epsilon);"&
+                                                     "                 }}");
+   args : cuda.driver.arguments := (f.d_address'Address, df.d_address'Address, vdf.d_address'Address, Sdf.d_address'Address,
+                                    t'Address, alpha'Address, beta1'Address, beta2'Address, epsilon'Address);
+begin
+
+   f.to_device;
+   df.to_device;
+   vdf.to_device;
+   sdf.to_device;
+
+
+   k.execute(func_name => "adam",
+             args      => args,
+             gridDimX  => 10,
+             blockDimX => 1);
+
+   f.to_host;
+   df.to_host;
+   vdf.to_host;
+   sdf.to_host;
+
+   for i in 1..f.num loop
+      ada.Text_IO.Put_Line(f.data(i)'img);
+   end loop;
+
+
+end test;

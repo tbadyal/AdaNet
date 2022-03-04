@@ -1,0 +1,300 @@
+pragma Ada_2005;
+pragma Style_Checks (Off);
+
+with Interfaces.C; use Interfaces.C;
+with curand_mtgp32_h;
+
+package curand_mtgp32dc_p_11213_h is
+
+  -- * Copyright 2010-2014 NVIDIA Corporation.  All rights reserved.
+  -- *
+  -- * NOTICE TO LICENSEE:
+  -- *
+  -- * This source code and/or documentation ("Licensed Deliverables") are
+  -- * subject to NVIDIA intellectual property rights under U.S. and
+  -- * international Copyright laws.
+  -- *
+  -- * These Licensed Deliverables contained herein is PROPRIETARY and
+  -- * CONFIDENTIAL to NVIDIA and is being provided under the terms and
+  -- * conditions of a form of NVIDIA software license agreement by and
+  -- * between NVIDIA and Licensee ("License Agreement") or electronically
+  -- * accepted by Licensee.  Notwithstanding any terms or conditions to
+  -- * the contrary in the License Agreement, reproduction or disclosure
+  -- * of the Licensed Deliverables to any third party without the express
+  -- * written consent of NVIDIA is prohibited.
+  -- *
+  -- * NOTWITHSTANDING ANY TERMS OR CONDITIONS TO THE CONTRARY IN THE
+  -- * LICENSE AGREEMENT, NVIDIA MAKES NO REPRESENTATION ABOUT THE
+  -- * SUITABILITY OF THESE LICENSED DELIVERABLES FOR ANY PURPOSE.  IT IS
+  -- * PROVIDED "AS IS" WITHOUT EXPRESS OR IMPLIED WARRANTY OF ANY KIND.
+  -- * NVIDIA DISCLAIMS ALL WARRANTIES WITH REGARD TO THESE LICENSED
+  -- * DELIVERABLES, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  -- * NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE.
+  -- * NOTWITHSTANDING ANY TERMS OR CONDITIONS TO THE CONTRARY IN THE
+  -- * LICENSE AGREEMENT, IN NO EVENT SHALL NVIDIA BE LIABLE FOR ANY
+  -- * SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, OR ANY
+  -- * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+  -- * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+  -- * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+  -- * OF THESE LICENSED DELIVERABLES.
+  -- *
+  -- * U.S. Government End Users.  These Licensed Deliverables are a
+  -- * "commercial item" as that term is defined at 48 C.F.R. 2.101 (OCT
+  -- * 1995), consisting of "commercial computer software" and "commercial
+  -- * computer software documentation" as such terms are used in 48
+  -- * C.F.R. 12.212 (SEPT 1995) and is provided to the U.S. Government
+  -- * only as a commercial end item.  Consistent with 48 C.F.R.12.212 and
+  -- * 48 C.F.R. 227.7202-1 through 227.7202-4 (JUNE 1995), all
+  -- * U.S. Government End Users acquire the Licensed Deliverables with
+  -- * only those rights set forth herein.
+  -- *
+  -- * Any use of the Licensed Deliverables in individual and commercial
+  -- * software must include, in the user documentation and internal
+  -- * comments to the code, the above Disclaimer and U.S. Government End
+  -- * Users Notice.
+  --  
+
+  -- * Multiple sets of generator parameters for Mersenne Twister
+  -- * with period 2**11213 -1
+  --  
+
+  -- * Copyright (c) 2009, 2010 Mutsuo Saito, Makoto Matsumoto and Hiroshima
+  -- * University.  All rights reserved.
+  -- * Copyright (c) 2011 Mutsuo Saito, Makoto Matsumoto, Hiroshima
+  -- * University and University of Tokyo.  All rights reserved.
+  -- *
+  -- * Redistribution and use in source and binary forms, with or without
+  -- * modification, are permitted provided that the following conditions are
+  -- * met:
+  -- * 
+  -- *     * Redistributions of source code must retain the above copyright
+  -- *       notice, this list of conditions and the following disclaimer.
+  -- *     * Redistributions in binary form must reproduce the above
+  -- *       copyright notice, this list of conditions and the following
+  -- *       disclaimer in the documentation and/or other materials provided
+  -- *       with the distribution.
+  -- *     * Neither the name of the Hiroshima University nor the names of
+  -- *       its contributors may be used to endorse or promote products
+  -- *       derived from this software without specific prior written
+  -- *       permission.
+  -- * 
+  -- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  -- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  -- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  -- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  -- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  -- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  -- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  -- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  -- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  -- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  -- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  --  
+
+   mtgp32dc_params_fast_11213 : aliased array (0 .. 199) of aliased curand_mtgp32_h.mtgp32_params_fast_t;  -- /usr/local/cuda-8.0/include/curand_mtgp32dc_p_11213.h:93
+   pragma Import (C, mtgp32dc_params_fast_11213, "mtgp32dc_params_fast_11213");
+
+  -- No.0 delta:1599 weight:665  
+  -- No.1 delta:1185 weight:1129  
+  -- No.2 delta:2848 weight:755  
+  -- No.3 delta:1100 weight:1261  
+  -- No.4 delta:5389 weight:1871  
+  -- No.5 delta:2280 weight:1243  
+  -- No.6 delta:722 weight:1357  
+  -- No.7 delta:3952 weight:825  
+  -- No.8 delta:4274 weight:1347  
+  -- No.9 delta:1902 weight:1001  
+  -- No.10 delta:1148 weight:927  
+  -- No.11 delta:2163 weight:1669  
+  -- No.12 delta:4985 weight:689  
+  -- No.13 delta:6473 weight:513  
+  -- No.14 delta:1389 weight:725  
+  -- No.15 delta:8365 weight:1135  
+  -- No.16 delta:6253 weight:641  
+  -- No.17 delta:5329 weight:467  
+  -- No.18 delta:3046 weight:699  
+  -- No.19 delta:786 weight:1431  
+  -- No.20 delta:846 weight:909  
+  -- No.21 delta:1909 weight:729  
+  -- No.22 delta:2420 weight:985  
+  -- No.23 delta:985 weight:863  
+  -- No.24 delta:1573 weight:1043  
+  -- No.25 delta:1860 weight:1169  
+  -- No.26 delta:2274 weight:1019  
+  -- No.27 delta:2503 weight:711  
+  -- No.28 delta:1642 weight:1597  
+  -- No.29 delta:1888 weight:1763  
+  -- No.30 delta:1194 weight:873  
+  -- No.31 delta:1509 weight:1313  
+  -- No.32 delta:3454 weight:869  
+  -- No.33 delta:1105 weight:1263  
+  -- No.34 delta:7663 weight:713  
+  -- No.35 delta:1045 weight:1387  
+  -- No.36 delta:2076 weight:1703  
+  -- No.37 delta:2017 weight:1375  
+  -- No.38 delta:2221 weight:1197  
+  -- No.39 delta:3255 weight:871  
+  -- No.40 delta:3532 weight:1325  
+  -- No.41 delta:5222 weight:1281  
+  -- No.42 delta:1107 weight:1153  
+  -- No.43 delta:3289 weight:739  
+  -- No.44 delta:1477 weight:1191  
+  -- No.45 delta:1261 weight:1353  
+  -- No.46 delta:2871 weight:1351  
+  -- No.47 delta:4370 weight:1245  
+  -- No.48 delta:1177 weight:859  
+  -- No.49 delta:3224 weight:947  
+  -- No.50 delta:6665 weight:1221  
+  -- No.51 delta:6604 weight:1075  
+  -- No.52 delta:980 weight:1115  
+  -- No.53 delta:2128 weight:1031  
+  -- No.54 delta:2047 weight:935  
+  -- No.55 delta:1367 weight:1089  
+  -- No.56 delta:1232 weight:1251  
+  -- No.57 delta:1379 weight:873  
+  -- No.58 delta:904 weight:1097  
+  -- No.59 delta:7724 weight:1539  
+  -- No.60 delta:2411 weight:1317  
+  -- No.61 delta:1265 weight:827  
+  -- No.62 delta:3397 weight:1223  
+  -- No.63 delta:1253 weight:1063  
+  -- No.64 delta:5028 weight:833  
+  -- No.65 delta:1199 weight:1181  
+  -- No.66 delta:1553 weight:539  
+  -- No.67 delta:1370 weight:1349  
+  -- No.68 delta:1769 weight:1053  
+  -- No.69 delta:1887 weight:1253  
+  -- No.70 delta:1651 weight:1401  
+  -- No.71 delta:805 weight:1559  
+  -- No.72 delta:1929 weight:1383  
+  -- No.73 delta:1312 weight:1037  
+  -- No.74 delta:1274 weight:753  
+  -- No.75 delta:3240 weight:999  
+  -- No.76 delta:1884 weight:1457  
+  -- No.77 delta:1037 weight:1439  
+  -- No.78 delta:3771 weight:1149  
+  -- No.79 delta:8905 weight:995  
+  -- No.80 delta:1084 weight:1327  
+  -- No.81 delta:2107 weight:929  
+  -- No.82 delta:1653 weight:993  
+  -- No.83 delta:2591 weight:1355  
+  -- No.84 delta:1724 weight:1387  
+  -- No.85 delta:1315 weight:1167  
+  -- No.86 delta:1805 weight:1023  
+  -- No.87 delta:2165 weight:1423  
+  -- No.88 delta:2728 weight:929  
+  -- No.89 delta:1302 weight:829  
+  -- No.90 delta:1794 weight:683  
+  -- No.91 delta:10527 weight:393  
+  -- No.92 delta:2494 weight:1233  
+  -- No.93 delta:2858 weight:713  
+  -- No.94 delta:1428 weight:871  
+  -- No.95 delta:1914 weight:999  
+  -- No.96 delta:1078 weight:1383  
+  -- No.97 delta:1680 weight:855  
+  -- No.98 delta:4818 weight:1887  
+  -- No.99 delta:4941 weight:807  
+  -- No.100 delta:1308 weight:863  
+  -- No.101 delta:3747 weight:693  
+  -- No.102 delta:3462 weight:1273  
+  -- No.103 delta:5054 weight:1635  
+  -- No.104 delta:2496 weight:907  
+  -- No.105 delta:1174 weight:1019  
+  -- No.106 delta:1564 weight:925  
+  -- No.107 delta:3386 weight:1851  
+  -- No.108 delta:2469 weight:1251  
+  -- No.109 delta:997 weight:681  
+  -- No.110 delta:2599 weight:829  
+  -- No.111 delta:2048 weight:1649  
+  -- No.112 delta:2152 weight:1369  
+  -- No.113 delta:1871 weight:1215  
+  -- No.114 delta:1950 weight:1011  
+  -- No.115 delta:1732 weight:1445  
+  -- No.116 delta:1707 weight:1245  
+  -- No.117 delta:2917 weight:1743  
+  -- No.118 delta:983 weight:1587  
+  -- No.119 delta:1397 weight:1065  
+  -- No.120 delta:1392 weight:827  
+  -- No.121 delta:1663 weight:775  
+  -- No.122 delta:1328 weight:751  
+  -- No.123 delta:1657 weight:573  
+  -- No.124 delta:1016 weight:1635  
+  -- No.125 delta:1214 weight:1175  
+  -- No.126 delta:962 weight:1245  
+  -- No.127 delta:4656 weight:1185  
+  -- No.128 delta:2214 weight:1371  
+  -- No.129 delta:886 weight:915  
+  -- No.130 delta:2602 weight:1519  
+  -- No.131 delta:1006 weight:1303  
+  -- No.132 delta:2899 weight:1651  
+  -- No.133 delta:1681 weight:1015  
+  -- No.134 delta:2863 weight:755  
+  -- No.135 delta:1967 weight:665  
+  -- No.136 delta:918 weight:1551  
+  -- No.137 delta:4265 weight:777  
+  -- No.138 delta:2916 weight:1245  
+  -- No.139 delta:2344 weight:1631  
+  -- No.140 delta:8901 weight:1275  
+  -- No.141 delta:3341 weight:741  
+  -- No.142 delta:5114 weight:1233  
+  -- No.143 delta:2115 weight:1465  
+  -- No.144 delta:1074 weight:843  
+  -- No.145 delta:2918 weight:721  
+  -- No.146 delta:2588 weight:993  
+  -- No.147 delta:1196 weight:1067  
+  -- No.148 delta:995 weight:1397  
+  -- No.149 delta:1807 weight:1017  
+  -- No.150 delta:2642 weight:975  
+  -- No.151 delta:962 weight:1023  
+  -- No.152 delta:1302 weight:1041  
+  -- No.153 delta:1084 weight:1123  
+  -- No.154 delta:1218 weight:1125  
+  -- No.155 delta:2783 weight:955  
+  -- No.156 delta:2681 weight:1401  
+  -- No.157 delta:4633 weight:903  
+  -- No.158 delta:1376 weight:811  
+  -- No.159 delta:1647 weight:1099  
+  -- No.160 delta:2967 weight:901  
+  -- No.161 delta:1285 weight:1009  
+  -- No.162 delta:3653 weight:1321  
+  -- No.163 delta:1515 weight:829  
+  -- No.164 delta:5942 weight:1403  
+  -- No.165 delta:1776 weight:1045  
+  -- No.166 delta:1278 weight:1311  
+  -- No.167 delta:1582 weight:743  
+  -- No.168 delta:7619 weight:787  
+  -- No.169 delta:1710 weight:1097  
+  -- No.170 delta:4372 weight:995  
+  -- No.171 delta:3023 weight:1549  
+  -- No.172 delta:892 weight:1461  
+  -- No.173 delta:1013 weight:1115  
+  -- No.174 delta:2582 weight:887  
+  -- No.175 delta:1962 weight:1531  
+  -- No.176 delta:2277 weight:543  
+  -- No.177 delta:1331 weight:1179  
+  -- No.178 delta:3213 weight:657  
+  -- No.179 delta:4972 weight:1077  
+  -- No.180 delta:2285 weight:1529  
+  -- No.181 delta:1320 weight:1461  
+  -- No.182 delta:789 weight:1509  
+  -- No.183 delta:1268 weight:1109  
+  -- No.184 delta:1092 weight:1295  
+  -- No.185 delta:8146 weight:1071  
+  -- No.186 delta:2697 weight:1957  
+  -- No.187 delta:2420 weight:1355  
+  -- No.188 delta:1841 weight:735  
+  -- No.189 delta:3318 weight:1469  
+  -- No.190 delta:1194 weight:821  
+  -- No.191 delta:1166 weight:1045  
+  -- No.192 delta:4742 weight:1471  
+  -- No.193 delta:3962 weight:1171  
+  -- No.194 delta:2215 weight:1499  
+  -- No.195 delta:1215 weight:463  
+  -- No.196 delta:939 weight:857  
+  -- No.197 delta:1583 weight:1233  
+  -- No.198 delta:1565 weight:813  
+  -- No.199 delta:3921 weight:921  
+   mtgpdc_params_11213_num : aliased int;  -- /usr/local/cuda-8.0/include/curand_mtgp32dc_p_11213.h:11697
+   pragma Import (C, mtgpdc_params_11213_num, "mtgpdc_params_11213_num");
+
+end curand_mtgp32dc_p_11213_h;

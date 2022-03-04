@@ -1,0 +1,8582 @@
+pragma Ada_2005;
+pragma Style_Checks (Off);
+
+with Interfaces.C; use Interfaces.C;
+with Interfaces.C.Extensions;
+
+package math_functions_h is
+
+  -- * Copyright 1993-2016 NVIDIA Corporation.  All rights reserved.
+  -- *
+  -- * NOTICE TO LICENSEE:
+  -- *
+  -- * This source code and/or documentation ("Licensed Deliverables") are
+  -- * subject to NVIDIA intellectual property rights under U.S. and
+  -- * international Copyright laws.
+  -- *
+  -- * These Licensed Deliverables contained herein is PROPRIETARY and
+  -- * CONFIDENTIAL to NVIDIA and is being provided under the terms and
+  -- * conditions of a form of NVIDIA software license agreement by and
+  -- * between NVIDIA and Licensee ("License Agreement") or electronically
+  -- * accepted by Licensee.  Notwithstanding any terms or conditions to
+  -- * the contrary in the License Agreement, reproduction or disclosure
+  -- * of the Licensed Deliverables to any third party without the express
+  -- * written consent of NVIDIA is prohibited.
+  -- *
+  -- * NOTWITHSTANDING ANY TERMS OR CONDITIONS TO THE CONTRARY IN THE
+  -- * LICENSE AGREEMENT, NVIDIA MAKES NO REPRESENTATION ABOUT THE
+  -- * SUITABILITY OF THESE LICENSED DELIVERABLES FOR ANY PURPOSE.  IT IS
+  -- * PROVIDED "AS IS" WITHOUT EXPRESS OR IMPLIED WARRANTY OF ANY KIND.
+  -- * NVIDIA DISCLAIMS ALL WARRANTIES WITH REGARD TO THESE LICENSED
+  -- * DELIVERABLES, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY,
+  -- * NONINFRINGEMENT, AND FITNESS FOR A PARTICULAR PURPOSE.
+  -- * NOTWITHSTANDING ANY TERMS OR CONDITIONS TO THE CONTRARY IN THE
+  -- * LICENSE AGREEMENT, IN NO EVENT SHALL NVIDIA BE LIABLE FOR ANY
+  -- * SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, OR ANY
+  -- * DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+  -- * WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+  -- * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+  -- * OF THESE LICENSED DELIVERABLES.
+  -- *
+  -- * U.S. Government End Users.  These Licensed Deliverables are a
+  -- * "commercial item" as that term is defined at 48 C.F.R. 2.101 (OCT
+  -- * 1995), consisting of "commercial computer software" and "commercial
+  -- * computer software documentation" as such terms are used in 48
+  -- * C.F.R. 12.212 (SEPT 1995) and is provided to the U.S. Government
+  -- * only as a commercial end item.  Consistent with 48 C.F.R.12.212 and
+  -- * 48 C.F.R. 227.7202-1 through 227.7202-4 (JUNE 1995), all
+  -- * U.S. Government End Users acquire the Licensed Deliverables with
+  -- * only those rights set forth herein.
+  -- *
+  -- * Any use of the Licensed Deliverables in individual and commercial
+  -- * software must include, in the user documentation and internal
+  -- * comments to the code, the above Disclaimer and U.S. Government End
+  -- * Users Notice.
+  --  
+
+  --*
+  -- * \defgroup CUDA_MATH Mathematical Functions
+  -- *
+  -- * CUDA mathematical functions are always available in device code.
+  -- * Some functions are also available in host code as indicated.
+  -- *
+  -- * Note that floating-point functions are overloaded for different
+  -- * argument types.  For example, the ::log() function has the following
+  -- * prototypes:
+  -- * \code
+  -- * double log(double x);
+  -- * float log(float x);
+  -- * float logf(float x);
+  -- * \endcode
+  --  
+
+  --******************************************************************************
+  --*                                                                              *
+  --*                                                                              *
+  --*                                                                              *
+  --****************************************************************************** 
+
+  --******************************************************************************
+  --*                                                                              *
+  --*                                                                              *
+  --*                                                                              *
+  --****************************************************************************** 
+
+  --******************************************************************************
+  --*                                                                              *
+  --*                                                                              *
+  --*                                                                              *
+  --****************************************************************************** 
+
+  -- Define math function DOXYGEN toplevel groups, functions will
+  --   be added to these groups later.
+  -- 
+
+  --*
+  -- * \defgroup CUDA_MATH_SINGLE Single Precision Mathematical Functions
+  -- * This section describes single precision mathematical functions.
+  --  
+
+  --*
+  -- * \defgroup CUDA_MATH_DOUBLE Double Precision Mathematical Functions
+  -- * This section describes double precision mathematical functions.
+  --  
+
+  --*
+  -- * \defgroup CUDA_MATH_INTRINSIC_SINGLE Single Precision Intrinsics
+  -- * This section describes single precision intrinsic functions that are
+  -- * only supported in device code.
+  --  
+
+  --*
+  -- * \defgroup CUDA_MATH_INTRINSIC_DOUBLE Double Precision Intrinsics
+  -- * This section describes double precision intrinsic functions that are
+  -- * only supported in device code.
+  --  
+
+  --*
+  -- * \defgroup CUDA_MATH_INTRINSIC_INT Integer Intrinsics
+  -- * This section describes integer intrinsic functions that are
+  -- * only supported in device code.
+  --  
+
+  --*
+  -- * \defgroup CUDA_MATH_INTRINSIC_CAST Type Casting Intrinsics
+  -- * This section describes type casting intrinsic functions that are
+  -- * only supported in device code.
+  --  
+
+  --*
+  -- *
+  -- * \defgroup CUDA_MATH_INTRINSIC_SIMD SIMD Intrinsics
+  -- * This section describes SIMD intrinsic functions that are
+  -- * only supported in device code.
+  --  
+
+  --*
+  -- * @}
+  --  
+
+  -- put all math functions in std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the absolute value of the input argument.
+  -- *
+  -- * Calculate the absolute value of the input argument \p x.
+  -- *
+  -- * \return
+  -- * Returns the absolute value of the input argument.
+  -- * - fabs(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - fabs(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 0.
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the absolute value of its argument
+  -- *
+  -- * Calculate the absolute value of the input argument \p x.
+  -- *
+  -- * \return
+  -- * Returns the absolute value of its argument.
+  -- * - fabs(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - fabs(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 0.
+  -- * \note_accuracy_single
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Determine the minimum numeric value of the arguments.
+  -- *
+  -- * Determines the minimum numeric value of the arguments \p x and \p y. Treats NaN 
+  -- * arguments as missing data. If one argument is a NaN and the other is legitimate numeric
+  -- * value, the numeric value is chosen.
+  -- *
+  -- * \return
+  -- * Returns the minimum numeric values of the arguments \p x and \p y.
+  -- * - If both arguments are NaN, returns NaN.
+  -- * - If one argument is NaN, returns the numeric argument.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Determine the minimum numeric value of the arguments.
+  -- *
+  -- * Determines the minimum numeric value of the arguments \p x and \p y. Treats NaN 
+  -- * arguments as missing data. If one argument is a NaN and the other is legitimate numeric
+  -- * value, the numeric value is chosen.
+  -- *
+  -- * \return
+  -- * Returns the minimum numeric values of the arguments \p x and \p y.
+  -- * - If both arguments are NaN, returns NaN.
+  -- * - If one argument is NaN, returns the numeric argument.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Determine the maximum numeric value of the arguments.
+  -- *
+  -- * Determines the maximum numeric value of the arguments \p x and \p y. Treats NaN 
+  -- * arguments as missing data. If one argument is a NaN and the other is legitimate numeric
+  -- * value, the numeric value is chosen.
+  -- *
+  -- * \return
+  -- * Returns the maximum numeric values of the arguments \p x and \p y.
+  -- * - If both arguments are NaN, returns NaN.
+  -- * - If one argument is NaN, returns the numeric argument.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Determine the maximum numeric value of the arguments.
+  -- *
+  -- * Determines the maximum numeric value of the arguments \p x and \p y. Treats NaN 
+  -- * arguments as missing data. If one argument is a NaN and the other is legitimate numeric
+  -- * value, the numeric value is chosen.
+  -- *
+  -- * \return
+  -- * Returns the maximum numeric values of the arguments \p x and \p y.
+  -- * - If both arguments are NaN, returns NaN.
+  -- * - If one argument is NaN, returns the numeric argument.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the sine of the input argument.
+  -- *
+  -- * Calculate the sine of the input argument \p x (measured in radians).
+  -- *
+  -- * \return 
+  -- * - sin(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sin(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the cosine of the input argument.
+  -- *
+  -- * Calculate the cosine of the input argument \p x (measured in radians).
+  -- *
+  -- * \return 
+  -- * - cos(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1.
+  -- * - cos(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the sine and cosine of the first input argument.
+  -- *
+  -- * Calculate the sine and cosine of the first input argument \p x (measured 
+  -- * in radians). The results for sine and cosine are written into the
+  -- * second argument, \p sptr, and, respectively, third argument, \p cptr.
+  -- *
+  -- * \return 
+  -- * - none
+  -- *
+  -- * \see ::sin() and ::cos().
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the sine and cosine of the first input argument.
+  -- *
+  -- * Calculate the sine and cosine of the first input argument \p x (measured
+  -- * in radians). The results for sine and cosine are written into the second 
+  -- * argument, \p sptr, and, respectively, third argument, \p cptr.
+  -- *
+  -- * \return 
+  -- * - none
+  -- *
+  -- * \see ::sinf() and ::cosf().
+  -- * \note_accuracy_single
+  -- * \note_fastmath
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the tangent of the input argument.
+  -- *
+  -- * Calculate the tangent of the input argument \p x (measured in radians).
+  -- *
+  -- * \return 
+  -- * - tan(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - tan(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the square root of the input argument.
+  -- *
+  -- * Calculate the nonnegative square root of \p x, 
+  -- * \latexonly $\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * Returns 
+  -- * \latexonly $\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sqrt(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sqrt(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sqrt(\p x) returns NaN if \p x is less than 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the reciprocal of the square root of the input argument.
+  -- *
+  -- * Calculate the reciprocal of the nonnegative square root of \p x, 
+  -- * \latexonly $1/\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * Returns 
+  -- * \latexonly $1/\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - rsqrt(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - rsqrt(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - rsqrt(\p x) returns NaN if \p x is less than 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the reciprocal of the square root of the input argument.
+  -- *
+  -- * Calculate the reciprocal of the nonnegative square root of \p x, 
+  -- * \latexonly $1/\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * Returns 
+  -- * \latexonly $1/\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - rsqrtf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - rsqrtf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - rsqrtf(\p x) returns NaN if \p x is less than 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 2 logarithm of the input argument.
+  -- *
+  -- * Calculate the base 2 logarithm of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - log2(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log2(1) returns +0.
+  -- * - log2(\p x) returns NaN for \p x < 0.
+  -- * - log2(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 2 exponential of the input argument.
+  -- *
+  -- * Calculate the base 2 exponential of the input argument \p x.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $2^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the base 2 exponential of the input argument.
+  -- *
+  -- * Calculate the base 2 exponential of the input argument \p x.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $2^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 10 exponential of the input argument.
+  -- *
+  -- * Calculate the base 10 exponential of the input argument \p x.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $10^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>10</m:mn>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the base 10 exponential of the input argument.
+  -- *
+  -- * Calculate the base 10 exponential of the input argument \p x.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $10^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>10</m:mn>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  -- * \note_fastmath
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument, minus 1.
+  -- *
+  -- * Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument \p x, minus 1.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $e^x - 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument, minus 1.
+  -- *
+  -- * Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument \p x, minus 1.
+  -- *
+  -- * \return  Returns 
+  -- * \latexonly $e^x - 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the base 2 logarithm of the input argument.
+  -- *
+  -- * Calculate the base 2 logarithm of the input argument \p x.
+  -- *
+  -- * \return
+  -- * - log2f(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log2f(1) returns +0.
+  -- * - log2f(\p x) returns NaN for \p x < 0.
+  -- * - log2f(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 10 logarithm of the input argument.
+  -- *
+  -- * Calculate the base 10 logarithm of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - log10(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log10(1) returns +0.
+  -- * - log10(\p x) returns NaN for \p x < 0.
+  -- * - log10(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  logarithm of the input argument.
+  -- *
+  -- * Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  logarithm of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - log(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log(1) returns +0.
+  -- * - log(\p x) returns NaN for \p x < 0.
+  -- * - log(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of 
+  -- * \latexonly $log_{e}(1+x)$ \endlatexonly
+  -- * \latexonly $\lfloor x \rfloor$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the value of 
+  -- * \latexonly $log_{e}(1+x)$ \endlatexonly
+  -- * \latexonly $\lfloor x \rfloor$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *   of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - log1p(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log1p(-1) returns +0.
+  -- * - log1p(\p x) returns NaN for \p x < -1.
+  -- * - log1p(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of 
+  -- * \latexonly $log_{e}(1+x)$ \endlatexonly
+  -- * \latexonly $\lfloor x \rfloor$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the value of 
+  -- * \latexonly $log_{e}(1+x)$ \endlatexonly
+  -- * \latexonly $\lfloor x \rfloor$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *   of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - log1pf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log1pf(-1) returns +0.
+  -- * - log1pf(\p x) returns NaN for \p x < -1.
+  -- * - log1pf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the largest integer less than or equal to \p x.
+  -- * 
+  -- * Calculates the largest integer value which is less than or equal to \p x.
+  -- * 
+  -- * \return
+  -- * Returns 
+  -- * \latexonly $log_{e}(1+x)$ \endlatexonly
+  -- * \latexonly $\lfloor x \rfloor$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  expressed as a floating-point number.
+  -- * - floor(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - floor(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument.
+  -- *
+  -- * Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument \p x.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $e^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the hyperbolic cosine of the input argument.
+  -- *
+  -- * Calculate the hyperbolic cosine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - cosh(0) returns 1.
+  -- * - cosh(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the hyperbolic sine of the input argument.
+  -- *
+  -- * Calculate the hyperbolic sine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - sinh(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the hyperbolic tangent of the input argument.
+  -- *
+  -- * Calculate the hyperbolic tangent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - tanh(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the nonnegative arc hyperbolic cosine of the input argument.
+  -- *
+  -- * Calculate the nonnegative arc hyperbolic cosine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in the interval [0, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ].
+  -- * - acosh(1) returns 0.
+  -- * - acosh(\p x) returns NaN for \p x in the interval [
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , 1).
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the nonnegative arc hyperbolic cosine of the input argument.
+  -- *
+  -- * Calculate the nonnegative arc hyperbolic cosine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in the interval [0, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ].
+  -- * - acoshf(1) returns 0.
+  -- * - acoshf(\p x) returns NaN for \p x in the interval [
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , 1).
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the arc hyperbolic sine of the input argument.
+  -- *
+  -- * Calculate the arc hyperbolic sine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - asinh(0) returns 1.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the arc hyperbolic sine of the input argument.
+  -- *
+  -- * Calculate the arc hyperbolic sine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - asinhf(0) returns 1.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the arc hyperbolic tangent of the input argument.
+  -- *
+  -- * Calculate the arc hyperbolic tangent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - atanh(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - atanh(
+  -- * \latexonly $\pm 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - atanh(\p x) returns NaN for \p x outside interval [-1, 1].
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the arc hyperbolic tangent of the input argument.
+  -- *
+  -- * Calculate the arc hyperbolic tangent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - atanhf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - atanhf(
+  -- * \latexonly $\pm 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - atanhf(\p x) returns NaN for \p x outside interval [-1, 1].
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of 
+  -- * \latexonly $x\cdot 2^{exp}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mi>p</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the value of 
+  -- * \latexonly $x\cdot 2^{exp}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mi>p</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  of the input arguments \p x and \p exp.
+  -- *
+  -- * \return 
+  -- * - ldexp(\p x) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the double floating point range.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of 
+  -- * \latexonly $x\cdot 2^{exp}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mi>p</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the value of 
+  -- * \latexonly $x\cdot 2^{exp}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mi>p</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  of the input arguments \p x and \p exp.
+  -- *
+  -- * \return 
+  -- * - ldexpf(\p x) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the single floating point range.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the floating point representation of the exponent of the input argument.
+  -- *
+  -- * Calculate the floating point representation of the exponent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - logb
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * - logb
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the floating point representation of the exponent of the input argument.
+  -- *
+  -- * Calculate the floating point representation of the exponent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - logbf
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * - logbf
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Compute the unbiased integer exponent of the argument.
+  -- *
+  -- * Calculates the unbiased integer exponent of the input argument \p x.
+  -- *
+  -- * \return
+  -- * - If successful, returns the unbiased exponent of the argument.
+  -- * - ilogb(0) returns <tt>INT_MIN</tt>.
+  -- * - ilogb(NaN) returns NaN.
+  -- * - ilogb(\p x) returns <tt>INT_MAX</tt> if \p x is 
+  -- * \latexonly $\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly 
+  -- *     or the correct value is greater than <tt>INT_MAX</tt>.
+  -- * - ilogb(\p x) return <tt>INT_MIN</tt> if the correct value is less 
+  -- *     than <tt>INT_MIN</tt>.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Compute the unbiased integer exponent of the argument.
+  -- *
+  -- * Calculates the unbiased integer exponent of the input argument \p x.
+  -- *
+  -- * \return
+  -- * - If successful, returns the unbiased exponent of the argument.
+  -- * - ilogbf(0) returns <tt>INT_MIN</tt>.
+  -- * - ilogbf(NaN) returns NaN.
+  -- * - ilogbf(\p x) returns <tt>INT_MAX</tt> if \p x is 
+  -- * \latexonly $\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly 
+  -- *     or the correct value is greater than <tt>INT_MAX</tt>.
+  -- * - ilogbf(\p x) return <tt>INT_MIN</tt> if the correct value is less 
+  -- *     than <tt>INT_MIN</tt>.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Scale floating-point input by integer power of two.
+  -- *
+  -- * Scale \p x by 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  by efficient manipulation of the floating-point
+  -- * exponent.
+  -- *
+  -- * \return 
+  -- * Returns \p x * 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalbn(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalbn(\p x, 0) returns \p x.
+  -- * - scalbn(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Scale floating-point input by integer power of two.
+  -- *
+  -- * Scale \p x by 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  by efficient manipulation of the floating-point
+  -- * exponent.
+  -- *
+  -- * \return 
+  -- * Returns \p x * 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalbnf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalbnf(\p x, 0) returns \p x.
+  -- * - scalbnf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Scale floating-point input by integer power of two.
+  -- *
+  -- * Scale \p x by 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  by efficient manipulation of the floating-point
+  -- * exponent.
+  -- *
+  -- * \return 
+  -- * Returns \p x * 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalbln(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalbln(\p x, 0) returns \p x.
+  -- * - scalbln(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Scale floating-point input by integer power of two.
+  -- *
+  -- * Scale \p x by 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  by efficient manipulation of the floating-point
+  -- * exponent.
+  -- *
+  -- * \return 
+  -- * Returns \p x * 
+  -- * \latexonly $2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalblnf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - scalblnf(\p x, 0) returns \p x.
+  -- * - scalblnf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p n) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Extract mantissa and exponent of a floating-point value
+  -- * 
+  -- * Decompose the floating-point value \p x into a component \p m for the 
+  -- * normalized fraction element and another term \p n for the exponent.
+  -- * The absolute value of \p m will be greater than or equal to  0.5 and 
+  -- * less than 1.0 or it will be equal to 0; 
+  -- * \latexonly $x = m\cdot 2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>=</m:mo>
+  -- *   <m:mi>m</m:mi>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * The integer exponent \p n will be stored in the location to which \p nptr points.
+  -- *
+  -- * \return
+  -- * Returns the fractional component \p m.
+  -- * - frexp(0, \p nptr) returns 0 for the fractional component and zero for the integer component.
+  -- * - frexp(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p nptr) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  and stores zero in the location pointed to by \p nptr.
+  -- * - frexp(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p nptr) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  and stores an unspecified value in the 
+  -- * location to which \p nptr points.
+  -- * - frexp(NaN, \p y) returns a NaN and stores an unspecified value in the location to which \p nptr points.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Extract mantissa and exponent of a floating-point value
+  -- * 
+  -- * Decomposes the floating-point value \p x into a component \p m for the 
+  -- * normalized fraction element and another term \p n for the exponent.
+  -- * The absolute value of \p m will be greater than or equal to  0.5 and 
+  -- * less than 1.0 or it will be equal to 0; 
+  -- * \latexonly $x = m\cdot 2^n$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>=</m:mo>
+  -- *   <m:mi>m</m:mi>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:msup>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * The integer exponent \p n will be stored in the location to which \p nptr points.
+  -- *
+  -- * \return
+  -- * Returns the fractional component \p m.
+  -- * - frexp(0, \p nptr) returns 0 for the fractional component and zero for the integer component.
+  -- * - frexp(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p nptr) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  and stores zero in the location pointed to by \p nptr.
+  -- * - frexp(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p nptr) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  and stores an unspecified value in the 
+  -- * location to which \p nptr points.
+  -- * - frexp(NaN, \p y) returns a NaN and stores an unspecified value in the location to which \p nptr points.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round to nearest integer value in floating-point.
+  -- *
+  -- * Round \p x to the nearest integer value in floating-point format,
+  -- * with halfway cases rounded away from zero.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  -- *
+  -- * \note_slow_round See ::rint().
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round to nearest integer value in floating-point.
+  -- *
+  -- * Round \p x to the nearest integer value in floating-point format,
+  -- * with halfway cases rounded away from zero.
+  -- *
+  -- * \return
+  -- * Returns rounded integer value.
+  -- *
+  -- * \note_slow_round See ::rintf().
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * away from zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  -- *
+  -- * \note_slow_round See ::lrint().
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * away from zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  -- *
+  -- * \note_slow_round See ::lrintf().
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * away from zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  -- *
+  -- * \note_slow_round See ::llrint().
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * away from zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  -- *
+  -- * \note_slow_round See ::llrintf().
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round to nearest integer value in floating-point.
+  -- *
+  -- * Round \p x to the nearest integer value in floating-point format,
+  -- * with halfway cases rounded to the nearest even integer value.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  --  
+
+  -- * We don't generate the declaration of rint for host compilation.
+  -- * This is acaully a workaround to compile the boost header file when
+  -- * Clang 3.8 is used as the host compiler. The boost header file has
+  -- * the following example code:
+  -- *   namespace NS { extern "C" { double rint(double); }
+  -- *   }
+  -- *
+  -- * After preprocessing, we get something like below:
+  -- *
+  -- * extern "C" { double rint(double x) throw(); }
+  -- * # 30 "/usr/include/math.h" 3
+  -- * extern "C" { double rint(double x) throw(); }
+  -- * namespace NS { extern "C" { double rint(double); } }
+  -- *
+  -- * Although GCC accepts this output, Clang 3.8 doesn't.
+  -- * Furthermore, we cannot change the boost header file by adding "throw()"
+  -- * to rint's declaration there. So, as a workaround, we just don't generate
+  -- * our re-declaration for the host compilation.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round input to nearest integer value in floating-point.
+  -- *
+  -- * Round \p x to the nearest integer value in floating-point format,
+  -- * with halfway cases rounded towards zero.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round input to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * towards zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round input to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * towards zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round input to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * towards zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round input to nearest integer value.
+  -- *
+  -- * Round \p x to the nearest integer value, with halfway cases rounded 
+  -- * towards zero.  If the result is outside the range of the return type,
+  -- * the result is undefined.
+  -- *
+  -- * \return 
+  -- * Returns rounded integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Round the input argument to the nearest integer.
+  -- *
+  -- * Round argument \p x to an integer value in double precision floating-point format.
+  -- *
+  -- * \return 
+  -- * - nearbyint(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - nearbyint(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Round the input argument to the nearest integer.
+  -- *
+  -- * Round argument \p x to an integer value in single precision floating-point format.
+  -- *
+  -- * \return 
+  -- * - nearbyintf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - nearbyintf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate ceiling of the input argument.
+  -- *
+  -- * Compute the smallest integer value not less than \p x.
+  -- *
+  -- * \return
+  -- * Returns 
+  -- * \latexonly $\lceil x \rceil$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo fence="false" stretchy="false">&#x2308;<!-- ⌈ --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo fence="false" stretchy="false">&#x2309;<!-- ⌉ --></m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- expressed as a floating-point number.
+  -- * - ceil(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - ceil(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Truncate input argument to the integral part.
+  -- *
+  -- * Round \p x to the nearest integer value that does not exceed \p x in 
+  -- * magnitude.
+  -- *
+  -- * \return 
+  -- * Returns truncated integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Truncate input argument to the integral part.
+  -- *
+  -- * Round \p x to the nearest integer value that does not exceed \p x in 
+  -- * magnitude.
+  -- *
+  -- * \return 
+  -- * Returns truncated integer value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Compute the positive difference between \p x and \p y.
+  -- *
+  -- * Compute the positive difference between \p x and \p y.  The positive
+  -- * difference is \p x - \p y when \p x > \p y and +0 otherwise.
+  -- *
+  -- * \return 
+  -- * Returns the positive difference between \p x and \p y.
+  -- * - fdim(\p x, \p y) returns \p x - \p y if \p x > \p y.
+  -- * - fdim(\p x, \p y) returns +0 if \p x 
+  -- * \latexonly $\leq$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly \p y.
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Compute the positive difference between \p x and \p y.
+  -- *
+  -- * Compute the positive difference between \p x and \p y.  The positive
+  -- * difference is \p x - \p y when \p x > \p y and +0 otherwise.
+  -- *
+  -- * \return 
+  -- * Returns the positive difference between \p x and \p y.
+  -- * - fdimf(\p x, \p y) returns \p x - \p y if \p x > \p y.
+  -- * - fdimf(\p x, \p y) returns +0 if \p x 
+  -- * \latexonly $\leq$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly \p y.
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the arc tangent of the ratio of first and second input arguments.
+  -- *
+  -- * Calculate the principal value of the arc tangent of the ratio of first
+  -- * and second input arguments \p y / \p x. The quadrant of the result is
+  -- * determined by the signs of inputs \p y and \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [-
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * /, +
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ].
+  -- * - atan2(0, 1) returns +0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the arc tangent of the input argument.
+  -- *
+  -- * Calculate the principal value of the arc tangent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [-
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * /2, +
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * /2].
+  -- * - atan(0) returns +0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the arc cosine of the input argument.
+  -- *
+  -- * Calculate the principal value of the arc cosine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [0, 
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ] for \p x inside [-1, +1].
+  -- * - acos(1) returns +0.
+  -- * - acos(\p x) returns NaN for \p x outside [-1, +1].
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the arc sine of the input argument.
+  -- *
+  -- * Calculate the principal value of the arc sine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [-
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * /2, +
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * /2] for \p x inside [-1, +1].
+  -- * - asin(0) returns +0.
+  -- * - asin(\p x) returns NaN for \p x outside [-1, +1].
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the square root of the sum of squares of two arguments.
+  -- *
+  -- * Calculate the length of the hypotenuse of a right triangle whose two sides have lengths 
+  -- * \p x and \p y without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of the hypotenuse 
+  -- * \latexonly $\sqrt{x^2+y^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>y</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate one over the square root of the sum of squares of two arguments.
+  -- *
+  -- * Calculate one over the length of the hypotenuse of a right triangle whose two sides have 
+  -- * lengths \p x and \p y without undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the hypotenuse 
+  -- * \latexonly $\frac{1}{\sqrt{x^2+y^2}}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>x</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>y</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the square root of the sum of squares of two arguments.
+  -- *
+  -- * Calculates the length of the hypotenuse of a right triangle whose two sides have lengths 
+  -- * \p x and \p y without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of the hypotenuse 
+  -- * \latexonly $\sqrt{x^2+y^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>y</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate one over the square root of the sum of squares of two arguments.
+  -- *
+  -- * Calculates one over the length of the hypotenuse of a right triangle whose two sides have 
+  -- * lengths \p x and \p y without undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the hypotenuse 
+  -- * \latexonly $\frac{1}{\sqrt{x^2+y^2}}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>x</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>y</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the square root of the sum of squares of three coordinates of the argument.
+  -- *
+  -- * Calculate the length of three dimensional vector \p p in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of 3D vector
+  -- * \latexonly $\sqrt{p.x^2+p.y^2+p.z^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>p.x</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.y</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.z</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate one over the square root of the sum of squares of three coordinates of the argument.
+  -- *
+  -- * Calculate one over the length of three dimensional vector \p p in euclidean space undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the 3D vetor 
+  -- * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2}}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>p.x</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.y</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.z</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the square root of the sum of squares of four coordinates of the argument.
+  -- *
+  -- * Calculate the length of four dimensional vector \p p in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of 4D vector
+  -- * \latexonly $\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>p.x</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.y</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.z</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.t</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate one over the square root of the sum of squares of four coordinates of the argument.
+  -- *
+  -- * Calculate one over the length of four dimensional vector \p p in euclidean space undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the 3D vetor 
+  -- * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>p.x</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.y</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.z</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *	   <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.t</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the square root of the sum of squares of any number of coordinates.
+  -- *
+  -- * Calculate the length of a vector p, dimension of which is passed as an argument \p without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of the dim-D vector 
+  -- * \latexonly $\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>p.1</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.2</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+ ... +</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.dim</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- * If two of the input arguments is 0, returns remaining argument
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the reciprocal of square root of the sum of squares of any number of coordinates.
+  -- *
+  -- * Calculates one over the length of vector \p p, dimension of which is passed as an agument, in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the vector
+  -- * \latexonly $\frac{1}{\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>p.1</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.2</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+ ... +</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.dim</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the reciprocal of square root of the sum of squares of any number of coordinates.
+  -- *
+  -- * Calculates one over the length of vector \p p, dimension of which is passed as an agument, in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the vector
+  -- * \latexonly $\frac{1}{\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>p.1</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.2</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+ ... +</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.dim</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the square root of the sum of squares of any number of coordinates.
+  -- *
+  -- * Calculates the length of a vector \p p, dimension of which is passed as an agument without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of the vector
+  -- * \latexonly $\sqrt{\sum_{i=1}^{dim} p_i^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>p.1</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.2</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+ ... +</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.dim</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the square root of the sum of squares of three coordinates of the argument.
+  -- *
+  -- * Calculates the length of three dimensional vector \p p in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of the 3D
+  -- * \latexonly $\sqrt{p.x^2+p.y^2+p.z^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>p.x</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.y</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.z</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate one over the square root of the sum of squares of three coordinates of the argument.
+  -- *
+  -- * Calculates one over the length of three dimension vector \p p in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the 3D vector
+  -- * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2}}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>p.x</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.y</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.z</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the square root of the sum of squares of four coordinates of the argument.
+  -- *
+  -- * Calculates the length of four dimensional vector \p p in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns the length of the 4D vector
+  -- * \latexonly $\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:msup>
+  -- *       <m:mi>p.x</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.y</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.z</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *     <m:mo>+</m:mo>
+  -- *     <m:msup>
+  -- *       <m:mi>p.t</m:mi>
+  -- *       <m:mn>2</m:mn>
+  -- *     </m:msup>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the correct value would overflow, returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * If the correct value would underflow, returns 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate one over the square root of the sum of squares of four coordinates of the argument.
+  -- *
+  -- * Calculates one over the length of four dimension vector \p p in euclidean space without undue overflow or underflow.
+  -- *
+  -- * \return Returns one over the length of the 3D vector
+  -- * \latexonly $\frac{1}{\sqrt{p.x^2+p.y^2+p.z^2+p.t^2}}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mrow>
+  -- *       <m:mi>1</m:mi>
+  -- *     </m:mrow>
+  -- *     <m:mrow>
+  -- *       <m:msqrt>
+  -- *         <m:msup>
+  -- *           <m:mi>p.x</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.y</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.z</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *         <m:mo>+</m:mo>
+  -- *         <m:msup>
+  -- *           <m:mi>p.z</m:mi>
+  -- *           <m:mn>2</m:mn>
+  -- *         </m:msup>
+  -- *       </m:msqrt>
+  -- *     </m:mrow>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * If the square root would overflow, returns 0.
+  -- * If the square root would underflow, returns
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the cube root of the input argument.
+  -- *
+  -- * Calculate the cube root of \p x, 
+  -- * \latexonly $x^{1/3}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>1</m:mn>
+  -- *       <m:mrow class="MJX-TeXAtom-ORD">
+  -- *         <m:mo>/</m:mo>
+  -- *       </m:mrow>
+  -- *       <m:mn>3</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * Returns 
+  -- * \latexonly $x^{1/3}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>1</m:mn>
+  -- *       <m:mrow class="MJX-TeXAtom-ORD">
+  -- *         <m:mo>/</m:mo>
+  -- *       </m:mrow>
+  -- *       <m:mn>3</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - cbrt(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - cbrt(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the cube root of the input argument.
+  -- *
+  -- * Calculate the cube root of \p x, 
+  -- * \latexonly $x^{1/3}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>1</m:mn>
+  -- *       <m:mrow class="MJX-TeXAtom-ORD">
+  -- *         <m:mo>/</m:mo>
+  -- *       </m:mrow>
+  -- *       <m:mn>3</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * Returns 
+  -- * \latexonly $x^{1/3}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>1</m:mn>
+  -- *       <m:mrow class="MJX-TeXAtom-ORD">
+  -- *         <m:mo>/</m:mo>
+  -- *       </m:mrow>
+  -- *       <m:mn>3</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - cbrtf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - cbrtf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate reciprocal cube root function.
+  -- *
+  -- * Calculate reciprocal cube root function of \p x
+  -- *
+  -- * \return 
+  -- * - rcbrt(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - rcbrt(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate reciprocal cube root function.
+  -- *
+  -- * Calculate reciprocal cube root function of \p x
+  -- *
+  -- * \return 
+  -- * - rcbrt(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - rcbrt(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the sine of the input argument 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the sine of \p x
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  (measured in radians), 
+  -- * where \p x is the input argument.
+  -- *
+  -- * \return 
+  -- * - sinpi(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sinpi(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the sine of the input argument 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the sine of \p x
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  (measured in radians), 
+  -- * where \p x is the input argument.
+  -- *
+  -- * \return 
+  -- * - sinpif(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sinpif(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the cosine of the input argument 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the cosine of \p x
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  (measured in radians), 
+  -- * where \p x is the input argument.
+  -- *
+  -- * \return 
+  -- * - cospi(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1.
+  -- * - cospi(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the cosine of the input argument 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the cosine of \p x
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  (measured in radians),
+  -- * where \p x is the input argument.
+  -- *
+  -- * \return 
+  -- * - cospif(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1.
+  -- * - cospif(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief  Calculate the sine and cosine of the first input argument 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the sine and cosine of the first input argument, \p x (measured in radians), 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.  The results for sine and cosine are written into the
+  -- * second argument, \p sptr, and, respectively, third argument, \p cptr.
+  -- *
+  -- * \return 
+  -- * - none
+  -- *
+  -- * \see ::sinpi() and ::cospi().
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief  Calculate the sine and cosine of the first input argument 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * Calculate the sine and cosine of the first input argument, \p x (measured in radians), 
+  -- * \latexonly $\times \pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.  The results for sine and cosine are written into the
+  -- * second argument, \p sptr, and, respectively, third argument, \p cptr.
+  -- *
+  -- * \return 
+  -- * - none
+  -- *
+  -- * \see ::sinpif() and ::cospif().
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of first argument to the power of second argument.
+  -- *
+  -- * Calculate the value of \p x to the power of \p y
+  -- *
+  -- * \return 
+  -- * - pow(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y an integer less than 0.
+  -- * - pow(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y an odd integer greater than 0.
+  -- * - pow(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns +0 for \p y > 0 and not and odd integer.
+  -- * - pow(-1, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1.
+  -- * - pow(+1, \p y) returns 1 for any \p y, even a NaN.
+  -- * - pow(\p x, 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1 for any \p x, even a NaN.
+  -- * - pow(\p x, \p y) returns a NaN for finite \p x < 0 and finite non-integer \p y.
+  -- * - pow(\p x, 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for 
+  -- * \latexonly $| x | < 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&lt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - pow(\p x, 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0 for 
+  -- * \latexonly $| x | > 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&gt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - pow(\p x, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0 for 
+  -- * \latexonly $| x | < 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&lt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - pow(\p x, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for 
+  -- * \latexonly $| x | > 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&gt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - pow(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns -0 for \p y an odd integer less than 0.
+  -- * - pow(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns +0 for \p y < 0 and not an odd integer.
+  -- * - pow(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y an odd integer greater than 0.
+  -- * - pow(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y > 0 and not an odd integer.
+  -- * - pow(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns +0 for \p y < 0.
+  -- * - pow(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y > 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Break down the input argument into fractional and integral parts.
+  -- *
+  -- * Break down the argument \p x into fractional and integral parts. The 
+  -- * integral part is stored in the argument \p iptr.
+  -- * Fractional and integral parts are given the same sign as the argument \p x.
+  -- *
+  -- * \return 
+  -- * - modf(
+  -- * \latexonly $\pm x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *  <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p iptr) returns a result with the same sign as \p x.
+  -- * - modf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p iptr) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  and stores 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *   in the object pointed to by \p iptr.
+  -- * - modf(NaN, \p iptr) stores a NaN in the object pointed to by \p iptr and returns a NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the floating-point remainder of \p x / \p y.
+  -- *
+  -- * Calculate the floating-point remainder of \p x / \p y. 
+  -- * The absolute value of the computed value is always less than \p y's
+  -- * absolute value and will have the same sign as \p x.
+  -- *
+  -- * \return
+  -- * - Returns the floating point remainder of \p x / \p y.
+  -- * - fmod(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if \p y is not zero.
+  -- * - fmod(\p x, \p y) returns NaN and raised an invalid floating point exception if \p x is 
+  -- * \latexonly $\pm\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  or \p y is zero.
+  -- * - fmod(\p x, \p y) returns zero if \p y is zero or the result would overflow.
+  -- * - fmod(\p x, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns \p x if \p x is finite.
+  -- * - fmod(\p x, 0) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Compute double-precision floating-point remainder.
+  -- *
+  -- * Compute double-precision floating-point remainder \p r of dividing 
+  -- * \p x by \p y for nonzero \p y. Thus 
+  -- * \latexonly $ r = x - n y$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>r</m:mi>
+  -- *   <m:mo>=</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi>n</m:mi>
+  -- *   <m:mi>y</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * The value \p n is the integer value nearest 
+  -- * \latexonly $ \frac{x}{y} $ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mi>y</m:mi>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * In the case when 
+  -- * \latexonly $ | n -\frac{x}{y} | = \frac{1}{2} $ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>n</m:mi>
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mfrac>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mi>y</m:mi>
+  -- *   </m:mfrac>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>=</m:mo>
+  -- *   <m:mfrac>
+  -- *     <m:mn>1</m:mn>
+  -- *     <m:mn>2</m:mn>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , the
+  -- * even \p n value is chosen.
+  -- *
+  -- * \return 
+  -- * - remainder(\p x, 0) returns NaN.
+  -- * - remainder(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns NaN.
+  -- * - remainder(\p x, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns \p x for finite \p x.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Compute single-precision floating-point remainder.
+  -- *
+  -- * Compute single-precision floating-point remainder \p r of dividing 
+  -- * \p x by \p y for nonzero \p y. Thus 
+  -- * \latexonly $ r = x - n y$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>r</m:mi>
+  -- *   <m:mo>=</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi>n</m:mi>
+  -- *   <m:mi>y</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * The value \p n is the integer value nearest 
+  -- * \latexonly $ \frac{x}{y} $ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mi>y</m:mi>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. 
+  -- * In the case when 
+  -- * \latexonly $ | n -\frac{x}{y} | = \frac{1}{2} $ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>n</m:mi>
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mfrac>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mi>y</m:mi>
+  -- *   </m:mfrac>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>=</m:mo>
+  -- *   <m:mfrac>
+  -- *     <m:mn>1</m:mn>
+  -- *     <m:mn>2</m:mn>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , the
+  -- * even \p n value is chosen.
+  -- *
+  -- * \return 
+  -- * \return 
+  -- * - remainderf(\p x, 0) returns NaN.
+  -- * - remainderf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns NaN.
+  -- * - remainderf(\p x, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns \p x for finite \p x.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Compute double-precision floating-point remainder and part of quotient.
+  -- *
+  -- * Compute a double-precision floating-point remainder in the same way as the
+  -- * ::remainder() function. Argument \p quo returns part of quotient upon 
+  -- * division of \p x by \p y. Value \p quo has the same sign as 
+  -- * \latexonly $ \frac{x}{y} $ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mi>y</m:mi>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * and may not be the exact quotient but agrees with the exact quotient
+  -- * in the low order 3 bits.
+  -- *
+  -- * \return 
+  -- * Returns the remainder.
+  -- * - remquo(\p x, 0, \p quo) returns NaN.
+  -- * - remquo(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y, \p quo) returns NaN.
+  -- * - remquo(\p x, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p quo) returns \p x.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Compute single-precision floating-point remainder and part of quotient.
+  -- *
+  -- * Compute a double-precision floating-point remainder in the same way as the 
+  -- * ::remainderf() function. Argument \p quo returns part of quotient upon 
+  -- * division of \p x by \p y. Value \p quo has the same sign as 
+  -- * \latexonly $ \frac{x}{y} $ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mi>x</m:mi>
+  -- *     <m:mi>y</m:mi>
+  -- *   </m:mfrac>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * and may not be the exact quotient but agrees with the exact quotient
+  -- * in the low order 3 bits.
+  -- *
+  -- * \return 
+  -- * Returns the remainder.
+  -- * - remquof(\p x, 0, \p quo) returns NaN.
+  -- * - remquof(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y, \p quo) returns NaN.
+  -- * - remquof(\p x, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p quo) returns \p x.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the Bessel function of the first kind of order 0 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the first kind of order 0 for
+  -- * the input argument \p x, 
+  -- * \latexonly $J_0(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>J</m:mi>
+  -- *     <m:mn>0</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the first kind of order 0.
+  -- * - j0(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - j0(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the Bessel function of the first kind of order 0 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the first kind of order 0 for
+  -- * the input argument \p x, 
+  -- * \latexonly $J_0(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>J</m:mi>
+  -- *     <m:mn>0</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the first kind of order 0.
+  -- * - j0f(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - j0f(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the Bessel function of the first kind of order 1 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the first kind of order 1 for
+  -- * the input argument \p x, 
+  -- * \latexonly $J_1(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>J</m:mi>
+  -- *     <m:mn>1</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the first kind of order 1.
+  -- * - j1(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - j1(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - j1(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the Bessel function of the first kind of order 1 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the first kind of order 1 for
+  -- * the input argument \p x, 
+  -- * \latexonly $J_1(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>J</m:mi>
+  -- *     <m:mn>1</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the first kind of order 1.
+  -- * - j1f(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - j1f(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - j1f(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the Bessel function of the first kind of order n for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the first kind of order \p n for
+  -- * the input argument \p x, 
+  -- * \latexonly $J_n(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>J</m:mi>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the first kind of order \p n.
+  -- * - jn(\p n, NaN) returns NaN.
+  -- * - jn(\p n, \p x) returns NaN for \p n < 0.
+  -- * - jn(\p n, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the Bessel function of the first kind of order n for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the first kind of order \p n for
+  -- * the input argument \p x, 
+  -- * \latexonly $J_n(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>J</m:mi>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the first kind of order \p n.
+  -- * - jnf(\p n, NaN) returns NaN.
+  -- * - jnf(\p n, \p x) returns NaN for \p n < 0.
+  -- * - jnf(\p n, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the Bessel function of the second kind of order 0 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the second kind of order 0 for
+  -- * the input argument \p x, 
+  -- * \latexonly $Y_0(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>Y</m:mi>
+  -- *     <m:mn>0</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the second kind of order 0.
+  -- * - y0(0) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - y0(\p x) returns NaN for \p x < 0.
+  -- * - y0(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - y0(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the Bessel function of the second kind of order 0 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the second kind of order 0 for
+  -- * the input argument \p x, 
+  -- * \latexonly $Y_0(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>Y</m:mi>
+  -- *     <m:mn>0</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the second kind of order 0.
+  -- * - y0f(0) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - y0f(\p x) returns NaN for \p x < 0.
+  -- * - y0f(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - y0f(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the Bessel function of the second kind of order 1 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the second kind of order 1 for
+  -- * the input argument \p x, 
+  -- * \latexonly $Y_1(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>Y</m:mi>
+  -- *     <m:mn>1</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the second kind of order 1.
+  -- * - y1(0) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - y1(\p x) returns NaN for \p x < 0.
+  -- * - y1(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - y1(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the Bessel function of the second kind of order 1 for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the second kind of order 1 for
+  -- * the input argument \p x, 
+  -- * \latexonly $Y_1(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>Y</m:mi>
+  -- *     <m:mn>1</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the second kind of order 1.
+  -- * - y1f(0) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - y1f(\p x) returns NaN for \p x < 0.
+  -- * - y1f(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - y1f(NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the Bessel function of the second kind of order n for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the second kind of order \p n for
+  -- * the input argument \p x, 
+  -- * \latexonly $Y_n(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>Y</m:mi>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the second kind of order \p n.
+  -- * - yn(\p n, \p x) returns NaN for \p n < 0.
+  -- * - yn(\p n, 0) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - yn(\p n, \p x) returns NaN for \p x < 0.
+  -- * - yn(\p n, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - yn(\p n, NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the Bessel function of the second kind of order n for the input argument.
+  -- *
+  -- * Calculate the value of the Bessel function of the second kind of order \p n for
+  -- * the input argument \p x, 
+  -- * \latexonly $Y_n(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>Y</m:mi>
+  -- *     <m:mi>n</m:mi>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the Bessel function of the second kind of order \p n.
+  -- * - ynf(\p n, \p x) returns NaN for \p n < 0.
+  -- * - ynf(\p n, 0) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - ynf(\p n, \p x) returns NaN for \p x < 0.
+  -- * - ynf(\p n, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- * - ynf(\p n, NaN) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the regular modified cylindrical Bessel function of order 0 for the input argument.
+  -- *
+  -- * Calculate the value of the regular modified cylindrical Bessel function of order 0 for
+  -- * the input argument \p x, 
+  -- * \latexonly $I_0(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>I</m:mi>
+  -- *     <m:mn>0</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the regular modified cylindrical Bessel function of order 0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the regular modified cylindrical Bessel function of order 0 for the input argument.
+  -- *
+  -- * Calculate the value of the regular modified cylindrical Bessel function of order 0 for
+  -- * the input argument \p x, 
+  -- * \latexonly $I_0(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>I</m:mi>
+  -- *     <m:mn>0</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the regular modified cylindrical Bessel function of order 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the value of the regular modified cylindrical Bessel function of order 1 for the input argument.
+  -- *
+  -- * Calculate the value of the regular modified cylindrical Bessel function of order 1 for
+  -- * the input argument \p x, 
+  -- * \latexonly $I_1(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>I</m:mi>
+  -- *     <m:mn>1</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the regular modified cylindrical Bessel function of order 1.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of the regular modified cylindrical Bessel function of order 1 for the input argument.
+  -- *
+  -- * Calculate the value of the regular modified cylindrical Bessel function of order 1 for
+  -- * the input argument \p x, 
+  -- * \latexonly $I_1(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>I</m:mi>
+  -- *     <m:mn>1</m:mn>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return
+  -- * Returns the value of the regular modified cylindrical Bessel function of order 1.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the error function of the input argument.
+  -- *
+  -- * Calculate the value of the error function for the input argument \p x,
+  -- * \latexonly $\frac{2}{\sqrt \pi} \int_0^x e^{-t^2} dt$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:msqrt>
+  -- *       <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- *     </m:msqrt>
+  -- *   </m:mfrac>
+  -- *   <m:msubsup>
+  -- *     <m:mo>&#x222B;<!-- ∫ --></m:mo>
+  -- *     <m:mn>0</m:mn>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msubsup>
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:msup>
+  -- *         <m:mi>t</m:mi>
+  -- *         <m:mn>2</m:mn>
+  -- *       </m:msup>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mi>d</m:mi>
+  -- *   <m:mi>t</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - erf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the error function of the input argument.
+  -- *
+  -- * Calculate the value of the error function for the input argument \p x,
+  -- * \latexonly $\frac{2}{\sqrt \pi} \int_0^x e^{-t^2} dt$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mfrac>
+  -- *     <m:mn>2</m:mn>
+  -- *     <m:msqrt>
+  -- *       <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- *     </m:msqrt>
+  -- *   </m:mfrac>
+  -- *   <m:msubsup>
+  -- *     <m:mo>&#x222B;<!-- ∫ --></m:mo>
+  -- *     <m:mn>0</m:mn>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msubsup>
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:msup>
+  -- *         <m:mi>t</m:mi>
+  -- *         <m:mn>2</m:mn>
+  -- *       </m:msup>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mi>d</m:mi>
+  -- *   <m:mi>t</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return  
+  -- * - erff(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - erff(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the inverse error function of the input argument.
+  -- *
+  -- * Calculate the inverse error function of the input argument \p y, for \p y in the interval [-1, 1].
+  -- * The inverse error function finds the value \p x that satisfies the equation \p y = erf(\p x),
+  -- * for 
+  -- * \latexonly $-1 \le y \le 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , and 
+  -- * \latexonly $-\infty \le x \le \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erfinv(1) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - erfinv(-1) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the inverse error function of the input argument.
+  -- *
+  -- * Calculate the inverse error function of the input argument \p y, for \p y in the interval [-1, 1].
+  -- * The inverse error function finds the value \p x that satisfies the equation \p y = erf(\p x),
+  -- * for 
+  -- * \latexonly $-1 \le y \le 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , and 
+  -- * \latexonly $-\infty \le x \le \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erfinvf(1) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - erfinvf(-1) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the complementary error function of the input argument.
+  -- *
+  -- * Calculate the complementary error function of the input argument \p x,
+  -- * 1 - erf(\p x).
+  -- *
+  -- * \return 
+  -- * - erfc(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 2.
+  -- * - erfc(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the complementary error function of the input argument.
+  -- *
+  -- * Calculate the complementary error function of the input argument \p x,
+  -- * 1 - erf(\p x).
+  -- *
+  -- * \return 
+  -- * - erfcf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 2.
+  -- * - erfcf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the natural logarithm of the absolute value of the gamma function of the input argument.
+  -- *
+  -- * Calculate the natural logarithm of the absolute value of the gamma function of the input argument \p x, namely the value of
+  -- * \latexonly $\log_{e}\left|\int_{0}^{\infty} e^{-t}t^{x-1}dt\right|$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msub>
+  -- *     <m:mi>log</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mfenced open="|" close="|">
+  -- *     <m:mrow>
+  -- *       <m:msubsup>
+  -- *         <m:mo>&#x222B;<!-- ∫ --></m:mo>
+  -- *         <m:mrow class="MJX-TeXAtom-ORD">
+  -- *           <m:mn>0</m:mn>
+  -- *         </m:mrow>
+  -- *         <m:mrow class="MJX-TeXAtom-ORD">
+  -- *           <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *         </m:mrow>
+  -- *       </m:msubsup>
+  -- *       <m:msup>
+  -- *         <m:mi>e</m:mi>
+  -- *         <m:mrow class="MJX-TeXAtom-ORD">
+  -- *           <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *           <m:mi>t</m:mi>
+  -- *         </m:mrow>
+  -- *       </m:msup>
+  -- *       <m:msup>
+  -- *         <m:mi>t</m:mi>
+  -- *         <m:mrow class="MJX-TeXAtom-ORD">
+  -- *           <m:mi>x</m:mi>
+  -- *           <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *           <m:mn>1</m:mn>
+  -- *         </m:mrow>
+  -- *       </m:msup>
+  -- *       <m:mi>d</m:mi>
+  -- *       <m:mi>t</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:mfenced>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *
+  -- * \return 
+  -- * - lgamma(1) returns +0.
+  -- * - lgamma(2) returns +0.
+  -- * - lgamma(\p x) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the double floating point range.
+  -- * - lgamma(\p x) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if \p x 
+  -- * \latexonly $\leq$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly 0 and \p x is an integer.
+  -- * - lgamma(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - lgamma(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the inverse complementary error function of the input argument.
+  -- *
+  -- * Calculate the inverse complementary error function of the input argument \p y, for \p y in the interval [0, 2].
+  -- * The inverse complementary error function find the value \p x that satisfies the equation \p y = erfc(\p x),
+  -- * for 
+  -- * \latexonly $0 \le y \le 2$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mn>0</m:mn>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mn>2</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , and 
+  -- * \latexonly $-\infty \le x \le \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erfcinv(0) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - erfcinv(2) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the inverse complementary error function of the input argument.
+  -- *
+  -- * Calculate the inverse complementary error function of the input argument \p y, for \p y in the interval [0, 2].
+  -- * The inverse complementary error function find the value \p x that satisfies the equation \p y = erfc(\p x),
+  -- * for 
+  -- * \latexonly $0 \le y \le 2$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mn>0</m:mn>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mn>2</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , and 
+  -- * \latexonly $-\infty \le x \le \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erfcinvf(0) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - erfcinvf(2) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the inverse of the standard normal cumulative distribution function.
+  -- *
+  -- * Calculate the inverse of the standard normal cumulative distribution function for input argument \p y,
+  -- * \latexonly $\Phi^{-1}(y)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi mathvariant="normal">&#x03A6;<!-- Φ --></m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mn>1</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. The function is defined for input values in the interval 
+  -- * \latexonly $(0, 1)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- *   <m:mo>,</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - normcdfinv(0) returns
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - normcdfinv(1) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - normcdfinv(\p x) returns NaN
+  -- *  if \p x is not in the interval [0,1].
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the inverse of the standard normal cumulative distribution function.
+  -- *
+  -- * Calculate the inverse of the standard normal cumulative distribution function for input argument \p y,
+  -- * \latexonly $\Phi^{-1}(y)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi mathvariant="normal">&#x03A6;<!-- Φ --></m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mn>1</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly. The function is defined for input values in the interval 
+  -- * \latexonly $(0, 1)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- *   <m:mo>,</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - normcdfinvf(0) returns
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - normcdfinvf(1) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - normcdfinvf(\p x) returns NaN
+  -- *  if \p x is not in the interval [0,1].
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the standard normal cumulative distribution function.
+  -- *
+  -- * Calculate the cumulative distribution function of the standard normal distribution for input argument \p y,
+  -- * \latexonly $\Phi(y)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi mathvariant="normal">&#x03A6;<!-- Φ --></m:mi>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - normcdf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1
+  -- * - normcdf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML"> 
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the standard normal cumulative distribution function.
+  -- *
+  -- * Calculate the cumulative distribution function of the standard normal distribution for input argument \p y,
+  -- * \latexonly $\Phi(y)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi mathvariant="normal">&#x03A6;<!-- Φ --></m:mi>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - normcdff(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1
+  -- * - normcdff(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML"> 
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the scaled complementary error function of the input argument.
+  -- *
+  -- * Calculate the scaled complementary error function of the input argument \p x,
+  -- * \latexonly $e^{x^2}\cdot \textrm{erfc}(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:msup>
+  -- *         <m:mi>x</m:mi>
+  -- *         <m:mn>2</m:mn>
+  -- *       </m:msup>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mtext>erfc</m:mtext>
+  -- *   </m:mrow>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erfcx(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>-</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * - erfcx(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML"> 
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0
+  -- * - erfcx(\p x) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the double floating point range.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the scaled complementary error function of the input argument.
+  -- *
+  -- * Calculate the scaled complementary error function of the input argument \p x,
+  -- * \latexonly $e^{x^2}\cdot \textrm{erfc}(x)$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:msup>
+  -- *         <m:mi>x</m:mi>
+  -- *         <m:mn>2</m:mn>
+  -- *       </m:msup>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mo>&#x22C5;<!-- ⋅ --></m:mo>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mtext>erfc</m:mtext>
+  -- *   </m:mrow>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - erfcxf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>-</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * - erfcxf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML"> 
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0
+  -- * - erfcxf(\p x) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the single floating point range.
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the natural logarithm of the absolute value of the gamma function of the input argument.
+  -- *
+  -- * Calculate the natural logarithm of the absolute value of the gamma function of the input argument \p x, namely the value of
+  -- * \latexonly $log_{e}|\ \int_{0}^{\infty} e^{-t}t^{x-1}dt|$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mtext>&#xA0;</m:mtext>
+  -- *   <m:msubsup>
+  -- *     <m:mo>&#x222B;<!-- ∫ --></m:mo>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>0</m:mn>
+  -- *     </m:mrow>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msubsup>
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mi>t</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:msup>
+  -- *     <m:mi>t</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mn>1</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mi>d</m:mi>
+  -- *   <m:mi>t</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - lgammaf(1) returns +0.
+  -- * - lgammaf(2) returns +0.
+  -- * - lgammaf(\p x) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the single floating point range.
+  -- * - lgammaf(\p x) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if \p x
+  -- * \latexonly $\leq$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2264;<!-- ≤ --></m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  0 and \p x is an integer.
+  -- * - lgammaf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - lgammaf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Calculate the gamma function of the input argument.
+  -- *
+  -- * Calculate the gamma function of the input argument \p x, namely the value of
+  -- * \latexonly $\int_{0}^{\infty} e^{-t}t^{x-1}dt$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msubsup>
+  -- *     <m:mo>&#x222B;<!-- ∫ --></m:mo>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>0</m:mn>
+  -- *     </m:mrow>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msubsup>
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mi>t</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:msup>
+  -- *     <m:mi>t</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mn>1</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mi>d</m:mi>
+  -- *   <m:mi>t</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - tgamma(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - tgamma(2) returns +1.
+  -- * - tgamma(\p x) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the double floating point range.
+  -- * - tgamma(\p x) returns NaN if \p x < 0 and \p x is an integer.
+  -- * - tgamma(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- * - tgamma(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the gamma function of the input argument.
+  -- *
+  -- * Calculate the gamma function of the input argument \p x, namely the value of
+  -- * \latexonly $\int_{0}^{\infty} e^{-t}t^{x-1}dt$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msubsup>
+  -- *     <m:mo>&#x222B;<!-- ∫ --></m:mo>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mn>0</m:mn>
+  -- *     </m:mrow>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msubsup>
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mi>t</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:msup>
+  -- *     <m:mi>t</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>x</m:mi>
+  -- *       <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *       <m:mn>1</m:mn>
+  -- *     </m:mrow>
+  -- *   </m:msup>
+  -- *   <m:mi>d</m:mi>
+  -- *   <m:mi>t</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * - tgammaf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - tgammaf(2) returns +1.
+  -- * - tgammaf(\p x) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if the correctly calculated value is outside the single floating point range.
+  -- * - tgammaf(\p x) returns NaN if \p x < 0  and \p x is an integer.
+  -- * - tgammaf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- * - tgammaf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --* \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Create value with given magnitude, copying sign of second value.
+  -- *
+  -- * Create a floating-point value with the magnitude \p x and the sign of \p y.
+  -- *
+  -- * \return
+  -- * Returns a value with the magnitude of \p x and the sign of \p y.
+  --  
+
+  --* \ingroup CUDA_MATH_SINGLE
+  -- * \brief Create value with given magnitude, copying sign of second value.
+  -- *
+  -- * Create a floating-point value with the magnitude \p x and the sign of \p y.
+  -- *
+  -- * \return
+  -- * Returns a value with the magnitude of \p x and the sign of \p y.
+  --  
+
+  -- FIXME exceptional cases for nextafter
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Return next representable double-precision floating-point value after argument.
+  -- *
+  -- * Calculate the next representable double-precision floating-point value
+  -- * following \p x in the direction of \p y. For example, if \p y is greater than \p x, ::nextafter()
+  -- * returns the smallest representable number greater than \p x
+  -- *
+  -- * \return 
+  -- * - nextafter(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  -- FIXME exceptional cases for nextafterf
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Return next representable single-precision floating-point value afer argument.
+  -- *
+  -- * Calculate the next representable single-precision floating-point value
+  -- * following \p x in the direction of \p y. For example, if \p y is greater than \p x, ::nextafterf()
+  -- * returns the smallest representable number greater than \p x
+  -- *
+  -- * \return 
+  -- * - nextafterf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Returns "Not a Number" value.
+  -- *
+  -- * Return a representation of a quiet NaN. Argument \p tagp selects one of the possible representations.
+  -- *
+  -- * \return 
+  -- * - nan(\p tagp) returns NaN.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Returns "Not a Number" value
+  -- *
+  -- * Return a representation of a quiet NaN. Argument \p tagp selects one of the possible representations.
+  -- *
+  -- * \return 
+  -- * - nanf(\p tagp) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- namespace std  
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * \brief Compute 
+  -- * \latexonly $x \times y + z$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>z</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  as a single operation.
+  -- *
+  -- * Compute the value of 
+  -- * \latexonly $x \times y + z$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>z</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  as a single ternary operation. After computing the value
+  -- * to infinite precision, the value is rounded once.
+  -- *
+  -- * \return
+  -- * Returns the rounded value of 
+  -- * \latexonly $x \times y + z$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>z</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  as a single operation.
+  -- * - fma(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p z) returns NaN.
+  -- * - fma(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p z) returns NaN.
+  -- * - fma(\p x, \p y, 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN if 
+  -- * \latexonly $x \times y$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  is an exact 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - fma(\p x, \p y, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN if 
+  -- * \latexonly $x \times y$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  is an exact 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_double
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Compute 
+  -- * \latexonly $x \times y + z$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>z</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  as a single operation.
+  -- *
+  -- * Compute the value of 
+  -- * \latexonly $x \times y + z$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>z</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  as a single ternary operation. After computing the value
+  -- * to infinite precision, the value is rounded once.
+  -- *
+  -- * \return
+  -- * Returns the rounded value of 
+  -- * \latexonly $x \times y + z$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>z</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  as a single operation.
+  -- * - fmaf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p z) returns NaN.
+  -- * - fmaf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p z) returns NaN.
+  -- * - fmaf(\p x, \p y, 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN if 
+  -- * \latexonly $x \times y$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  is an exact 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - fmaf(\p x, \p y, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN if 
+  -- * \latexonly $x \times y$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo>&#x00D7;<!-- × --></m:mo>
+  -- *   <m:mi>y</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  is an exact 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- std  
+  -- these are here to avoid warnings on the call graph.
+  --   long double is not supported on the device  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the arc cosine of the input argument.
+  -- *
+  -- * Calculate the principal value of the arc cosine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [0, 
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ] for \p x inside [-1, +1].
+  -- * - acosf(1) returns +0.
+  -- * - acosf(\p x) returns NaN for \p x outside [-1, +1].
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the arc sine of the input argument.
+  -- *
+  -- * Calculate the principal value of the arc sine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [-
+  -- * \latexonly $\pi/2$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mn>2</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , +
+  -- * \latexonly $\pi/2$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mn>2</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ] for \p x inside [-1, +1].
+  -- * - asinf(0) returns +0.
+  -- * - asinf(\p x) returns NaN for \p x outside [-1, +1].
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the arc tangent of the input argument.
+  -- *
+  -- * Calculate the principal value of the arc tangent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [-
+  -- * \latexonly $\pi/2$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mn>2</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , +
+  -- * \latexonly $\pi/2$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo>/</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mn>2</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ].
+  -- * - atanf(0) returns +0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the arc tangent of the ratio of first and second input arguments.
+  -- *
+  -- * Calculate the principal value of the arc tangent of the ratio of first
+  -- * and second input arguments \p y / \p x. The quadrant of the result is 
+  -- * determined by the signs of inputs \p y and \p x.
+  -- *
+  -- * \return 
+  -- * Result will be in radians, in the interval [-
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , +
+  -- * \latexonly $\pi$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>&#x03C0;<!-- π --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ].
+  -- * - atan2f(0, 1) returns +0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the cosine of the input argument.
+  -- *
+  -- * Calculate the cosine of the input argument \p x (measured in radians).
+  -- *
+  -- * \return 
+  -- * - cosf(0) returns 1.
+  -- * - cosf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  -- * \note_fastmath
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the sine of the input argument.
+  -- *
+  -- * Calculate the sine of the input argument \p x (measured in radians).
+  -- *
+  -- * \return 
+  -- * - sinf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sinf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  -- * \note_fastmath
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the tangent of the input argument.
+  -- *
+  -- * Calculate the tangent of the input argument \p x (measured in radians).
+  -- *
+  -- * \return 
+  -- * - tanf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - tanf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  -- * \note_fastmath
+  --  
+
+  -- FIXME return values for large arg values
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the hyperbolic cosine of the input argument.
+  -- *
+  -- * Calculate the hyperbolic cosine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - coshf(0) returns 1.
+  -- * - coshf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the hyperbolic sine of the input argument.
+  -- *
+  -- * Calculate the hyperbolic sine of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - sinhf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sinhf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the hyperbolic tangent of the input argument.
+  -- *
+  -- * Calculate the hyperbolic tangent of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - tanhf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the natural logarithm of the input argument.
+  -- *
+  -- * Calculate the natural logarithm of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - logf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - logf(1) returns +0.
+  -- * - logf(\p x) returns NaN for \p x < 0.
+  -- * - logf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument.
+  -- *
+  -- * Calculate the base 
+  -- * \latexonly $e$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>e</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  exponential of the input argument \p x, 
+  -- * \latexonly $e^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return Returns 
+  -- * \latexonly $e^x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msup>
+  -- *     <m:mi>e</m:mi>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msup>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  -- * \note_fastmath
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the base 10 logarithm of the input argument.
+  -- *
+  -- * Calculate the base 10 logarithm of the input argument \p x.
+  -- *
+  -- * \return 
+  -- * - log10f(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - log10f(1) returns +0.
+  -- * - log10f(\p x) returns NaN for \p x < 0.
+  -- * - log10f(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Break down the input argument into fractional and integral parts.
+  -- *
+  -- * Break down the argument \p x into fractional and integral parts. The integral part is stored in the argument \p iptr.
+  -- * Fractional and integral parts are given the same sign as the argument \p x.
+  -- *
+  -- * \return 
+  -- * - modff(
+  -- * \latexonly $\pm x$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *  <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p iptr) returns a result with the same sign as \p x.
+  -- * - modff(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p iptr) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  and stores 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *   in the object pointed to by \p iptr.
+  -- * - modff(NaN, \p iptr) stores a NaN in the object pointed to by \p iptr and returns a NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the value of first argument to the power of second argument.
+  -- *
+  -- * Calculate the value of \p x to the power of \p y.
+  -- *
+  -- * \return 
+  -- * - powf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y an integer less than 0.
+  -- * - powf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y an odd integer greater than 0.
+  -- * - powf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns +0 for \p y > 0 and not and odd integer.
+  -- * - powf(-1, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1.
+  -- * - powf(+1, \p y) returns 1 for any \p y, even a NaN.
+  -- * - powf(\p x, 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 1 for any \p x, even a NaN.
+  -- * - powf(\p x, \p y) returns a NaN for finite \p x < 0 and finite non-integer \p y.
+  -- * - powf(\p x, 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for 
+  -- * \latexonly $| x | < 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&lt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - powf(\p x, 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0 for 
+  -- * \latexonly $| x | > 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&gt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - powf(\p x, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns +0 for 
+  -- * \latexonly $| x | < 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&lt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - powf(\p x, 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for 
+  -- * \latexonly $| x | > 1$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mrow class="MJX-TeXAtom-ORD">
+  -- *     <m:mo stretchy="false">|</m:mo>
+  -- *   </m:mrow>
+  -- *   <m:mo>&gt;</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - powf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns -0 for \p y an odd integer less than 0.
+  -- * - powf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns +0 for \p y < 0 and not an odd integer.
+  -- * - powf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y an odd integer greater than 0.
+  -- * - powf(
+  -- * \latexonly $-\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x2212;<!-- − --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y > 0 and not an odd integer.
+  -- * - powf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns +0 for \p y < 0.
+  -- * - powf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  for \p y > 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the square root of the input argument.
+  -- *
+  -- * Calculate the nonnegative square root of \p x, 
+  -- * \latexonly $\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \return 
+  -- * Returns 
+  -- * \latexonly $\sqrt{x}$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:msqrt>
+  -- *     <m:mi>x</m:mi>
+  -- *   </m:msqrt>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sqrtf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sqrtf(
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $+\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - sqrtf(\p x) returns NaN if \p x is less than 0.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate ceiling of the input argument.
+  -- *
+  -- * Compute the smallest integer value not less than \p x.
+  -- *
+  -- * \return
+  -- * Returns 
+  -- * \latexonly $\lceil x \rceil$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo fence="false" stretchy="false">&#x2308;<!-- ⌈ --></m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo fence="false" stretchy="false">&#x2309;<!-- ⌉ --></m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  expressed as a floating-point number.
+  -- * - ceilf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - ceilf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the largest integer less than or equal to \p x.
+  -- * 
+  -- * Calculate the largest integer value which is less than or equal to \p x.
+  -- * 
+  -- * \return
+  -- * Returns 
+  -- * \latexonly $log_{e}(1+x)$ \endlatexonly
+  -- * \latexonly $\lfloor x \rfloor$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mi>l</m:mi>
+  -- *   <m:mi>o</m:mi>
+  -- *   <m:msub>
+  -- *     <m:mi>g</m:mi>
+  -- *     <m:mrow class="MJX-TeXAtom-ORD">
+  -- *       <m:mi>e</m:mi>
+  -- *     </m:mrow>
+  -- *   </m:msub>
+  -- *   <m:mo stretchy="false">(</m:mo>
+  -- *   <m:mn>1</m:mn>
+  -- *   <m:mo>+</m:mo>
+  -- *   <m:mi>x</m:mi>
+  -- *   <m:mo stretchy="false">)</m:mo>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  expressed as a floating-point number.
+  -- * - floorf(
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- * - floorf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>\endxmlonly.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Calculate the floating-point remainder of \p x / \p y.
+  -- *
+  -- * Calculate the floating-point remainder of \p x / \p y. 
+  -- * The absolute value of the computed value is always less than \p y's
+  -- * absolute value and will have the same sign as \p x.
+  -- *
+  -- * \return
+  -- * - Returns the floating point remainder of \p x / \p y.
+  -- * - fmodf(
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * , \p y) returns 
+  -- * \latexonly $\pm 0$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mn>0</m:mn>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  if \p y is not zero.
+  -- * - fmodf(\p x, \p y) returns NaN and raised an invalid floating point exception if \p x is 
+  -- * \latexonly $\pm\infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- *  or \p y is zero.
+  -- * - fmodf(\p x, \p y) returns zero if \p y is zero or the result would overflow.
+  -- * - fmodf(\p x, 
+  -- * \latexonly $\pm \infty$ \endlatexonly
+  -- * \xmlonly
+  -- * <d4p_MathML outputclass="xmlonly">
+  -- * <m:math xmlns:m="http://www.w3.org/1998/Math/MathML">
+  -- *   <m:mo>&#x00B1;<!-- ± --></m:mo>
+  -- *   <m:mi mathvariant="normal">&#x221E;<!-- ∞ --></m:mi>
+  -- * </m:math>
+  -- * </d4p_MathML>
+  -- * \endxmlonly
+  -- * ) returns \p x if \p x is finite.
+  -- * - fmodf(\p x, 0) returns NaN.
+  -- *
+  -- * \note_accuracy_single
+  --  
+
+  -- redeclare some builtins that QNX uses  
+  -- std  
+  --******************************************************************************
+  --*                                                                              *
+  --*                                                                              *
+  --*                                                                              *
+  --****************************************************************************** 
+
+  -- GCC 6.1 uses ::isnan(double x) for isnan(double x)  
+  -- GCC 6.1 uses ::isinf(double x) for isinf(double x)  
+  -- QNX defines functions in std, need to declare them here,
+  -- * redefine in CUDABE  
+
+  -- QNX defines functions in std, need to declare them here,
+  -- * redefine in CUDABE  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Return the sign bit of the input.
+  -- *
+  -- * Determine whether the floating-point value \p a is negative.
+  -- *
+  -- * \return
+  -- * Reports the sign bit of all values including infinities, zeros, and NaNs.
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns 
+  -- * true if and only if \p a is negative.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
+  -- * nonzero value if and only if \p a is negative. 
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Return the sign bit of the input.
+  -- *
+  -- * Determine whether the floating-point value \p a is negative.
+  -- *
+  -- * \return
+  -- * Reports the sign bit of all values including infinities, zeros, and NaNs.
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns 
+  -- * true if and only if \p a is negative.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
+  -- * nonzero value if and only if \p a is negative. 
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * 
+  -- * \brief Return the sign bit of the input.
+  -- *
+  -- * Determine whether the floating-point value \p a is negative.
+  -- *
+  -- * \return
+  -- * Reports the sign bit of all values including infinities, zeros, and NaNs.
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns 
+  -- * true if and only if \p a is negative.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'.  Returns a nonzero value 
+  -- * if and only if \p a is negative.  
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * 
+  -- * \brief Return the sign bit of the input.
+  -- *
+  -- * Determine whether the floating-point value \p a is negative.
+  -- *
+  -- * \return
+  -- * Reports the sign bit of all values including infinities, zeros, and NaNs.
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns 
+  -- * true if and only if \p a is negative.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'.  Returns a nonzero value 
+  -- * if and only if \p a is negative.  
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Determine whether argument is infinite.
+  -- *
+  -- * Determine whether the floating-point value \p a is an infinite value
+  -- * (positive or negative).
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: Returns true if and only 
+  -- * if \p a is a infinite value.
+  -- * - With other host compilers: Returns a nonzero value if and only 
+  -- * if \p a is a infinite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Determine whether argument is infinite.
+  -- *
+  -- * Determine whether the floating-point value \p a is an infinite value
+  -- * (positive or negative).
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: Returns true if and only 
+  -- * if \p a is a infinite value.
+  -- * - With other host compilers: Returns a nonzero value if and only 
+  -- * if \p a is a infinite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * 
+  -- * \brief Determine whether argument is infinite.
+  -- *
+  -- * Determine whether the floating-point value \p a is an infinite value
+  -- * (positive or negative).
+  -- *
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns 
+  -- * true if and only if \p a is a infinite value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a nonzero 
+  -- * value if and only if \p a is a infinite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * 
+  -- * \brief Determine whether argument is infinite.
+  -- *
+  -- * Determine whether the floating-point value \p a is an infinite value
+  -- * (positive or negative).
+  -- *
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns 
+  -- * true if and only if \p a is a infinite value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a nonzero 
+  -- * value if and only if \p a is a infinite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Determine whether argument is a NaN.
+  -- *
+  -- * Determine whether the floating-point value \p a is a NaN.
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. 
+  -- * Returns true if and only if \p a is a NaN value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
+  -- * nonzero value if and only if \p a is a NaN value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Determine whether argument is a NaN.
+  -- *
+  -- * Determine whether the floating-point value \p a is a NaN.
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. 
+  -- * Returns true if and only if \p a is a NaN value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
+  -- * nonzero value if and only if \p a is a NaN value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * 
+  -- * 
+  -- * \brief Determine whether argument is a NaN.
+  -- *
+  -- * Determine whether the floating-point value \p a is a NaN.
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. 
+  -- * Returns true if and only if \p a is a NaN value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
+  -- * nonzero value if and only if \p a is a NaN value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * 
+  -- * 
+  -- * \brief Determine whether argument is a NaN.
+  -- *
+  -- * Determine whether the floating-point value \p a is a NaN.
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. 
+  -- * Returns true if and only if \p a is a NaN value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns a 
+  -- * nonzero value if and only if \p a is a NaN value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Determine whether argument is finite.
+  -- *
+  -- * Determine whether the floating-point value \p a is a finite value
+  -- * (zero, subnormal, or normal and not infinity or NaN).
+  -- *
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns
+  -- * true if and only if \p a is a finite value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
+  -- * a nonzero value if and only if \p a is a finite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_DOUBLE
+  -- * 
+  -- * \brief Determine whether argument is finite.
+  -- *
+  -- * Determine whether the floating-point value \p a is a finite value
+  -- * (zero, subnormal, or normal and not infinity or NaN).
+  -- *
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns
+  -- * true if and only if \p a is a finite value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
+  -- * a nonzero value if and only if \p a is a finite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Determine whether argument is finite.
+  -- *
+  -- * Determine whether the floating-point value \p a is a finite value
+  -- * (zero, subnormal, or normal and not infinity or NaN).
+  -- *
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns
+  -- * true if and only if \p a is a finite value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
+  -- * a nonzero value if and only if \p a is a finite value.
+  --  
+
+  --*
+  -- * \ingroup CUDA_MATH_SINGLE
+  -- * \brief Determine whether argument is finite.
+  -- *
+  -- * Determine whether the floating-point value \p a is a finite value
+  -- * (zero, subnormal, or normal and not infinity or NaN).
+  -- *
+  -- * \return
+  -- * - With Visual Studio 2013 host compiler: __RETURN_TYPE is 'bool'. Returns
+  -- * true if and only if \p a is a finite value.
+  -- * - With other host compilers: __RETURN_TYPE is 'int'. Returns 
+  -- * a nonzero value if and only if \p a is a finite value.
+  --  
+
+  --******************************************************************************
+  --*                                                                              *
+  --*                                                                              *
+  --*                                                                              *
+  --****************************************************************************** 
+
+  --******************************************************************************
+  --*                                                                              *
+  --* DEVICE                                                                       *
+  --*                                                                              *
+  --****************************************************************************** 
+
+  -- we do not support long double yet, hence double  
+  -- we do not support long double yet, hence double  
+  -- provide own versions of QNX builtins  
+  --******************************************************************************
+  --*                                                                              *
+  --* ONLY FOR HOST CODE! NOT FOR DEVICE EXECUTION                                 *
+  --*                                                                              *
+  --****************************************************************************** 
+
+   function min (a : int; b : int) return int;  -- /usr/local/cuda-8.0/include/math_functions.h:10103
+   pragma Import (CPP, min, "_Z3minii");
+
+   function umin (a : unsigned; b : unsigned) return unsigned;  -- /usr/local/cuda-8.0/include/math_functions.h:10105
+   pragma Import (CPP, umin, "_Z4uminjj");
+
+   function llmin (a : Long_Long_Integer; b : Long_Long_Integer) return Long_Long_Integer;  -- /usr/local/cuda-8.0/include/math_functions.h:10107
+   pragma Import (CPP, llmin, "_Z5llminxx");
+
+   function ullmin (a : Extensions.unsigned_long_long; b : Extensions.unsigned_long_long) return Extensions.unsigned_long_long;  -- /usr/local/cuda-8.0/include/math_functions.h:10109
+   pragma Import (CPP, ullmin, "_Z6ullminyy");
+
+   function max (a : int; b : int) return int;  -- /usr/local/cuda-8.0/include/math_functions.h:10111
+   pragma Import (CPP, max, "_Z3maxii");
+
+   function umax (a : unsigned; b : unsigned) return unsigned;  -- /usr/local/cuda-8.0/include/math_functions.h:10113
+   pragma Import (CPP, umax, "_Z4umaxjj");
+
+   function llmax (a : Long_Long_Integer; b : Long_Long_Integer) return Long_Long_Integer;  -- /usr/local/cuda-8.0/include/math_functions.h:10115
+   pragma Import (CPP, llmax, "_Z5llmaxxx");
+
+   function ullmax (a : Extensions.unsigned_long_long; b : Extensions.unsigned_long_long) return Extensions.unsigned_long_long;  -- /usr/local/cuda-8.0/include/math_functions.h:10117
+   pragma Import (CPP, ullmax, "_Z6ullmaxyy");
+
+end math_functions_h;
