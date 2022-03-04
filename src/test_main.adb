@@ -24,11 +24,11 @@ procedure test_main is
       end return;
    end avg;
 
-   training_set : data.cifar10.vector_t(256,3,32,32,10);
-   validation_set : data.cifar10.vector_t(256,3,32,32,10);
+   training_set : data.cifar10.vector_t(32,3,64,64,10);
+   validation_set : data.cifar10.vector_t(32,3,64,64,10);
 
-   x : tensors.tensor_t := tensors.init(256,3,32,32);
-   dy : tensors.tensor_t := tensors.init(256,10,1,1);
+   x : tensors.tensor_t := tensors.init(32,3,64,64);
+   dy : tensors.tensor_t := tensors.init(32,10,1,1);
    m : data.dim3_t;
    s : data.dim3_t;
 
@@ -37,29 +37,41 @@ procedure test_main is
 
 
 begin
-   training_set.init("cifar10_train_images.bin");
-   validation_set.init("cifar10_test_images.bin");
+   training_set.init("../cifar10/prep/cifar10_train_images.bin");
+   validation_set.init("../cifar10/prep/cifar10_test_images.bin");
 
    m := training_set.mean;
    s := training_set.std(m);
 
-   net.add(cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,96,3,3));
+   net.add(cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,64,7,7,2));
+   net.add(cuda.cudnn.make.batchnorm(cuda.cudnn.SPATIAL));
    net.add(cuda.cudnn.make.activation(cuda.cudnn.RELU));
-   net.add(cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,96,3,3,2));
-   net.add(cuda.cudnn.make.activation(cuda.cudnn.RELU));
-   net.add(cuda.cudnn.make.dropout(0.2));
+   net.add(cuda.cudnn.make.pooling(cuda.cudnn.MAX_POOL,3,3,2));
 
-   net.add(cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,192,3,3));
-   net.add(cuda.cudnn.make.activation(cuda.cudnn.RELU));
-   net.add(cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,192,3,3,2));
-   net.add(cuda.cudnn.make.activation(cuda.cudnn.RELU));
-   net.add(cuda.cudnn.make.dropout(0.5));
+   net.add(cuda.cudnn.make.convolutional_block(64,64,256,stride => 1));
+   net.add(cuda.cudnn.make.identity_block(64,64,256));
+   net.add(cuda.cudnn.make.identity_block(64,64,256));
+
+   net.add(cuda.cudnn.make.convolutional_block(128,128,512,stride => 2));
+   net.add(cuda.cudnn.make.identity_block(128,128,512));
+   net.add(cuda.cudnn.make.identity_block(128,128,512));
+   net.add(cuda.cudnn.make.identity_block(128,128,512));
+
+   net.add(cuda.cudnn.make.convolutional_block(256,256,1024,stride => 2));
+   net.add(cuda.cudnn.make.identity_block(256,256,1024));
+   net.add(cuda.cudnn.make.identity_block(256,256,1024));
+   net.add(cuda.cudnn.make.identity_block(256,256,1024));
+   net.add(cuda.cudnn.make.identity_block(256,256,1024));
+   net.add(cuda.cudnn.make.identity_block(256,256,1024));
+
+   net.add(cuda.cudnn.make.convolutional_block(512,512,2048,stride => 2));
+   net.add(cuda.cudnn.make.identity_block(512,512,2048));
+   net.add(cuda.cudnn.make.identity_block(512,512,2048));
+
+
+   net.add(cuda.cudnn.make.pooling(cuda.cudnn.AVG_INC_PAD,2,2, padding=>cuda.cudnn.SAME));
 
    net.add(cuda.cudnn.make.flatten);
-   net.add(cuda.cudnn.make.batchnorm(cuda.cudnn.SPATIAL));
-   net.add(cuda.cudnn.make.fullyconnected(256));
-   net.add(cuda.cudnn.make.activation(cuda.cudnn.RELU));
-
    net.add(cuda.cudnn.make.fullyconnected(10));
    net.add(cuda.cudnn.make.softmax(cuda.cudnn.INSTANCE));
 

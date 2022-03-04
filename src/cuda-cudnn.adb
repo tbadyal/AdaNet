@@ -1074,43 +1074,6 @@ package body cuda.cudnn is
 
    end init;
 
-   procedure ibwd(self : in out identity_block_t; dy : tensor_t) is
-   begin
-      self.dy := dy;
-
-      self.act_l.ibwd(self.dy);
-
-      self.bn3.ibwd(self.act_l.dx);
-      self.conv3.ibwd(self.bn3.dx);
-
-      self.act2.ibwd(self.conv3.dx);
-      self.bn2.ibwd(self.act2.dx);
-      self.conv2.ibwd(self.bn2.dx);
-
-      self.act1.ibwd(self.conv2.dx);
-      self.bn1.ibwd(self.act1.dx);
-      self.conv1.ibwd(self.bn1.dx);
-
-      --self.dx := self.conv1.dx;
-      self.dx := self.act_l.dx;
-
-   end ibwd;
-
-   procedure free(self : in out identity_block_t) is
-   begin
-      self.y.free;
-      self.dx.free;
-      self.conv1.free;
-      self.bn1.free;
-      self.act1.free;
-      self.conv2.free;
-      self.bn2.free;
-      self.act2.free;
-      self.conv3.free;
-      self.bn3.free;
-      self.act_l.free;
-   end free;
-
    procedure fwd(self : in out identity_block_t) is
    begin
 
@@ -1130,6 +1093,27 @@ package body cuda.cudnn is
       self.act_l.fwd;
    end fwd;
 
+   procedure ibwd(self : in out identity_block_t; dy : tensor_t) is
+   begin
+      self.dy := dy;
+
+      self.act_l.ibwd(self.dy);
+
+      self.bn3.ibwd(self.act_l.dx);
+      self.conv3.ibwd(self.bn3.dx);
+
+      self.act2.ibwd(self.conv3.dx);
+      self.bn2.ibwd(self.act2.dx);
+      self.conv2.ibwd(self.bn2.dx);
+
+      self.act1.ibwd(self.conv2.dx);
+      self.bn1.ibwd(self.act1.dx);
+      self.conv1.ibwd(self.bn1.dx);
+
+      self.dx := self.conv1.dx;
+
+   end ibwd;
+
    procedure bwd(self : in out identity_block_t) is
    begin
       self.act_l.bwd;
@@ -1145,9 +1129,25 @@ package body cuda.cudnn is
       self.bn1.bwd;
       self.conv1.bwd;
 
-      --self.dx.add(self.act_l.dx);
+      self.dx.add(self.act_l.dx);
 
    end bwd;
+
+   procedure free(self : in out identity_block_t) is
+   begin
+      self.y.free;
+      self.dx.free;
+      self.conv1.free;
+      self.bn1.free;
+      self.act1.free;
+      self.conv2.free;
+      self.bn2.free;
+      self.act2.free;
+      self.conv3.free;
+      self.bn3.free;
+      self.act_l.free;
+   end free;
+
 
    procedure upd(self : in out identity_block_t) is
    begin
@@ -1237,49 +1237,7 @@ package body cuda.cudnn is
 
    end init;
 
-   procedure ibwd(self : in out convolutional_block_t; dy : tensor_t) is
-   begin
-      self.dy := dy;
-
-      self.act_l.ibwd(self.dy);
-
-      self.bn_sc.ibwd(self.act_l.dx);
-      self.conv_sc.ibwd(self.bn_sc.dx);
-
-      self.bn3.ibwd(self.act_l.dx);
-      self.conv3.ibwd(self.bn3.dx);
-
-      self.act2.ibwd(self.conv3.dx);
-      self.bn2.ibwd(self.act2.dx);
-      self.conv2.ibwd(self.bn2.dx);
-
-      self.act1.ibwd(self.conv2.dx);
-      self.bn1.ibwd(self.act1.dx);
-      self.conv1.ibwd(self.bn1.dx);
-
-      --self.dx := self.conv1.dx;
-      self.dx := self.conv_sc.dx;
-
-   end ibwd;
-
-   procedure free(self : in out convolutional_block_t) is
-   begin
-      self.y.free;
-      self.dx.free;
-      self.conv1.free;
-      self.bn1.free;
-      self.act1.free;
-      self.conv2.free;
-      self.bn2.free;
-      self.act2.free;
-      self.conv3.free;
-      self.bn3.free;
-      self.conv_sc.free;
-      self.bn_sc.free;
-      self.act_l.free;
-   end free;
-
-   procedure fwd(self : in out convolutional_block_t) is
+  procedure fwd(self : in out convolutional_block_t) is
    begin
 
       self.conv1.fwd;
@@ -1301,6 +1259,31 @@ package body cuda.cudnn is
       self.act_l.fwd;
    end fwd;
 
+   procedure ibwd(self : in out convolutional_block_t; dy : tensor_t) is
+   begin
+      self.dy := dy;
+
+      self.act_l.ibwd(self.dy);
+
+      self.bn_sc.ibwd(self.act_l.dx);
+      self.conv_sc.ibwd(self.bn_sc.dx);
+
+      self.bn3.ibwd(self.act_l.dx);
+      self.conv3.ibwd(self.bn3.dx);
+
+      self.act2.ibwd(self.conv3.dx);
+      self.bn2.ibwd(self.act2.dx);
+      self.conv2.ibwd(self.bn2.dx);
+
+      self.act1.ibwd(self.conv2.dx);
+      self.bn1.ibwd(self.act1.dx);
+      self.conv1.ibwd(self.bn1.dx);
+
+      self.dx := self.conv1.dx;
+
+
+   end ibwd;
+
    procedure bwd(self : in out convolutional_block_t) is
    begin
       self.act_l.bwd;
@@ -1319,9 +1302,26 @@ package body cuda.cudnn is
       self.bn1.bwd;
       self.conv1.bwd;
 
-      --self.dx.add(self.conv_sc.dx);
+      self.dx.add(self.conv_sc.dx);
 
    end bwd;
+
+   procedure free(self : in out convolutional_block_t) is
+   begin
+      self.y.free;
+      self.dx.free;
+      self.conv1.free;
+      self.bn1.free;
+      self.act1.free;
+      self.conv2.free;
+      self.bn2.free;
+      self.act2.free;
+      self.conv3.free;
+      self.bn3.free;
+      self.conv_sc.free;
+      self.bn_sc.free;
+      self.act_l.free;
+   end free;
 
    procedure upd(self : in out convolutional_block_t) is
    begin

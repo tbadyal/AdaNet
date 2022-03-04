@@ -19,7 +19,7 @@ procedure Main is
 
    net : cuda.cudnn.sequential_t;
 
-   package cifar10 is new data.cifar10(32,32,3,10);
+   package cifar10 is new data.cifar10(64,64,3,10);
    package cifar10_test is new cifar10.test;
    training_set : cifar10.vector_t;
    validation_set : cifar10_test.test_vector_t;

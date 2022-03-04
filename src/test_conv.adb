@@ -7,31 +7,20 @@ with storage;
 with Ada.Integer_Text_IO;
 
 procedure test_conv is
-   img : storage.files_t := (To_Unbounded_String("/home/tushar/gprprojects/adanet2/img/test1.png"),
-                             To_Unbounded_String("/home/tushar/gprprojects/adanet2/img/ironman.jpg"));
-   x : tensors.tensor_t := tensors.init(2,3,32,32);
-   dy : tensors.tensor_t := tensors.rand(2,2352);
+   img : storage.files_t := (To_Unbounded_String("../img/test1.png"),
+                             To_Unbounded_String("../img/ironman.jpg"));
+   x : tensors.tensor_t := tensors.init(2,3,64,64);
    conv : cuda.cudnn.convolution_t :=
-     cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,3,5,5,1, padding => cuda.cudnn.VALID);
-   flat : cuda.cudnn.flatten_t := cuda.cudnn.make.flatten;
+     cuda.cudnn.make.convolution(cuda.cudnn.CROSS_CORRELATION,64,7,7,2, padding => cuda.cudnn.VALID);
 begin
    conv.init(x);
-   flat.init(conv.y);
-   flat.ibwd(dy);
-   conv.ibwd(flat.dx);
+
 
    x.read(img);
 
    conv.fwd;
 
-   flat.fwd;
-
-
-   flat.bwd;
-
-   flat.dx.show;
-   conv.bwd;
-   conv.dx.print;
+   conv.y.show;
 exception
    when e : others =>
       ada.Text_IO.Put_Line(gnat.Traceback.Symbolic.Symbolic_Traceback(e));

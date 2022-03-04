@@ -14,8 +14,8 @@ procedure make_cifar10 is
    c : Positive := 3;
    h1 : Positive := 32;
    w1 : Positive := 32;
-   h2 : Positive := 32;
-   w2 : Positive := 32;
+   h2 : Positive := 64;
+   w2 : Positive := 64;
 
 
    train_list_g : storage.files_t := (To_Unbounded_String("../cifar10/data/data_batch_1.bin"),

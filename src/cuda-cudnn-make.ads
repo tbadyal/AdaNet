@@ -29,6 +29,6 @@ package cuda.cudnn.make is
 
    function identity_block(k1,k2,k3 : Positive)  return identity_block_t;
 
-   function convolutional_block(k1,k2,k3 : Positive)  return convolutional_block_t;
+   function convolutional_block(k1,k2,k3 : Positive; stride : Positive := 1)  return convolutional_block_t;
 
 end cuda.cudnn.make;

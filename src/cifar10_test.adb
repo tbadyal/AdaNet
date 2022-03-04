@@ -6,9 +6,9 @@ with ada.Float_Text_IO;
 with gnat.Traceback.Symbolic;
 
 procedure cifar10_test is
-   training_set : data.cifar10.vector_t(10,3,32,32,10);
-   test_set : data.cifar10.vector_t(10,3,32,32,10);
-   x : tensors.tensor_t := tensors.init(10,3,32,32);
+   training_set : data.cifar10.vector_t(10,3,64,64,10);
+   test_set : data.cifar10.vector_t(10,3,64,64,10);
+   x : tensors.tensor_t := tensors.init(10,3,64,64);
    l : tensors.tensor_t := tensors.init(10,10,1,1);
    m : data.dim3_t;
    s : data.dim3_t;

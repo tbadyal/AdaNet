@@ -128,11 +128,11 @@ package body cuda.cudnn.make is
       end return;
    end identity_block;
 
-   function convolutional_block(k1,k2,k3: Positive)  return convolutional_block_t is
+   function convolutional_block(k1,k2,k3: Positive; stride : Positive := 1)  return convolutional_block_t is
    begin
       return self : convolutional_block_t do
 
-         self.conv1 := convolution(CROSS_CORRELATION,k1,1,1,2);
+         self.conv1 := convolution(CROSS_CORRELATION,k1,1,1,stride=>stride);
          self.bn1 := batchnorm(PER_ACTIVATION);
          self.act1 := activation(RELU);
 
@@ -143,7 +143,7 @@ package body cuda.cudnn.make is
          self.conv3 := convolution(CROSS_CORRELATION,k3,1,1);
          self.bn3 := batchnorm(PER_ACTIVATION);
 
-         self.conv_sc := convolution(CROSS_CORRELATION,k3,1,1,2);
+         self.conv_sc := convolution(CROSS_CORRELATION,k3,1,1,stride=>stride);
          self.bn_sc := batchnorm(PER_ACTIVATION);
 
          self.act_l := activation(RELU);
