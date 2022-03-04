@@ -14,8 +14,8 @@ procedure cifar10_test is
    s : data.dim3_t;
 begin
 
-   training_set.init("cifar10_train_images.bin");
-   test_set.init("cifar10_test_images.bin");
+   training_set.init("../cifar10/prep/cifar10_train_images.bin");
+   test_set.init("../cifar10/prep/cifar10_test_images.bin");
 
 
    m := training_set.mean;

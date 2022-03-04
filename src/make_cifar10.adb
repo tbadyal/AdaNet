@@ -18,17 +18,17 @@ procedure make_cifar10 is
    w2 : Positive := 32;
 
 
-   train_list_g : storage.files_t := (To_Unbounded_String("/home/tushar/gprprojects/cifar10/data/data_batch_1.bin"),
-                                      To_Unbounded_String("/home/tushar/gprprojects/cifar10/data/data_batch_2.bin"),
-                                      To_Unbounded_String("/home/tushar/gprprojects/cifar10/data/data_batch_3.bin"),
-                                      To_Unbounded_String("/home/tushar/gprprojects/cifar10/data/data_batch_4.bin"),
-                                      To_Unbounded_String("/home/tushar/gprprojects/cifar10/data/data_batch_5.bin"));
+   train_list_g : storage.files_t := (To_Unbounded_String("../cifar10/data/data_batch_1.bin"),
+                                      To_Unbounded_String("../cifar10/data/data_batch_2.bin"),
+                                      To_Unbounded_String("../cifar10/data/data_batch_3.bin"),
+                                      To_Unbounded_String("../cifar10/data/data_batch_4.bin"),
+                                      To_Unbounded_String("../cifar10/data/data_batch_5.bin"));
 
-   test_list_g : storage.files_t := (1 => To_Unbounded_String("/home/tushar/gprprojects/cifar10/data/test_batch.bin"));
+   test_list_g : storage.files_t := (1 => To_Unbounded_String("../cifar10/data/test_batch.bin"));
 
 
-   train_images_g : constant String := "cifar10_train_images.bin";
-   test_images_g : constant String := "cifar10_test_images.bin";
+   train_images_g : constant String := "../cifar10/prep/cifar10_train_images.bin";
+   test_images_g : constant String := "../cifar10/prep/cifar10_test_images.bin";
 
    procedure get_images(files_list : storage.files_t; file_images : String) is
 
