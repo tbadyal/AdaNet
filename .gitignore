@@ -5,4 +5,4 @@
 *.ali
 
 obj
-bin
+*.bin
